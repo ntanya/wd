@@ -1,0 +1,28 @@
+
+link(rel='stylesheet', href='/stylesheets/style.css')
+script(type='text/javascript')
+   // var data =!{JSON.stringify(users)}
+   
+table#users
+  tr
+     td Username
+     td Name
+     td Profile pic
+     td Follower count
+     td Following
+     td Description
+     td Monitor
+  each user in users
+     tr
+        td 
+          a(href='http://twitter.com/#!/' + user.screen_name) #{user.screen_name}
+        td #{user.name} 
+        td 
+          img(src=user.profile_image_url)
+        td #{user.followers_count}
+        td JustinBeiber
+        td #{user.description}
+        td
+          input(type="checkbox",checked)
+         
+      

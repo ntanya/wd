@@ -1,0 +1,11 @@
+body {
+  padding: 50px;
+  font: 11px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+p{display:block; border:1px solid #eee; margin:10px;}
+.today{float:right;color:blue;}
+.yesterday{float:left; color:green;}
