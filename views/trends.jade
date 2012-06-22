@@ -1,0 +1,20 @@
+link(rel='stylesheet', href='/stylesheets/style.css')
+script(type='text/javascript')
+    var data =!{JSON.stringify(trends)}
+    
+    
+script(src='http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js')
+script(src='/javascripts/script.js')
+h1
+#trends
+    - each trend in trends
+      div
+        p
+          span(id=trend.tag,class='tag') #{trend.tag}
+          if(trend.tag_date == '6/20/2012')
+            span.yesterday= trend.count
+            span.today
+          else
+            span.yesterday
+            span.today= trend.count
+          

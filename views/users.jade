@@ -4,7 +4,7 @@ script(type='text/javascript')
    // var data =!{JSON.stringify(users)}
    
 table#users
-  tr
+  tr.header
      td Username
      td Name
      td Profile pic
@@ -18,9 +18,9 @@ table#users
           a(href='http://twitter.com/#!/' + user.screen_name) #{user.screen_name}
         td #{user.name} 
         td 
-          img(src=user.profile_image_url)
+          img(src=user.profile_image_url, width='48px')
         td #{user.followers_count}
-        td JustinBeiber
+        td jb
         td #{user.description}
         td
           input(type="checkbox",checked)

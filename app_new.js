@@ -2,7 +2,6 @@ var express = require('express');
 var connect = require('connect');
 var TwitterProsessor = require('./twitter').TwitterProcessor;
 
-
 var hashtags = [];
 var tagCounter = [];
 
@@ -27,8 +26,7 @@ app.configure('production', function(){
 });
 
 var twitterProcessor = new TwitterProcessor();
-
-
+// Home page
 app.get('/', function(req, res){
 	
 	if (req.url != '/favicon.ico') {
@@ -37,10 +35,10 @@ app.get('/', function(req, res){
 	
   	res.send('getting tweets…'); 
 });
-
+// Trends page
 app.get('/trends', function(req, res){
 	twitterProcessor.getTrends( function(error, trendData){
-			res.render('index.jade',{ locals: {
+			res.render('trends.jade',{ locals: {
    				   trends:trendData 
     			}
        		});		
@@ -48,7 +46,7 @@ app.get('/trends', function(req, res){
 	
 	);
 });
-
+// Users page
 app.get('/users', function(req, res){
 	twitterProcessor.getUsers( function(error, userData){
 			res.render('users.jade',{ locals: {
@@ -59,8 +57,7 @@ app.get('/users', function(req, res){
 	
 	);
 });
-
-
+// Process influencer, get influencer twitter name from the query string
 app.get('/find/:id', function(req, res){
     
 	var user = req.params.id;
@@ -74,8 +71,7 @@ app.get('/find/:id', function(req, res){
 });
 
 
-
-
+// Start server
 var port = process.env.PORT || 3000;
 app.listen(port, function() {
   console.log("Listening on " + port);

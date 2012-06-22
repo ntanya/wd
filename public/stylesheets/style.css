@@ -6,6 +6,10 @@ body {
 a {
   color: #00B7FF;
 }
-p{display:block; border:1px solid #eee; margin:10px;}
-.today{float:right;color:blue;}
-.yesterday{float:left; color:green;}
+p{display:block; border-bottom:1px solid #eee; margin:10px;}
+span{padding:0 15px;}
+span.tag{min-width:250px;}
+.today{color:blue;}
+.yesterday{color:green;}
+
+tr.header td{font-weight:bold;background-color:#eee;padding:7px;}

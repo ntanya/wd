@@ -12,6 +12,7 @@ String.prototype.trim = function() {
 	return this.replace(/^\s+|\s+$/g,"");
 }
 
+/*------ constructor ------------*/
 
 TwitterProcessor = function(){
 	mongo.connect(mongostr, {}, function(error, db)
@@ -57,7 +58,7 @@ TwitterProcessor.prototype.dbInc = function(colName, field){
 /*------------- app interaction functions -----------------*/
 
 TwitterProcessor.prototype.getTrends = function(callback){
-	this.getCollection('tweets1', function(error, coll){
+	this.getCollection('tweets', function(error, coll){
 		if(error) callback (error);
 		else{
 			coll.find({}, {_id:0}).sort({count:-1}).toArray(function(error,results){
@@ -122,7 +123,7 @@ TwitterProcessor.prototype.saveFollowers = function(dataObj){
 	}
 };
 
-httpGet = function(url, callback){
+httpGet = function(url, callback, param){
 	var completeResponse = "";
 	var options = {
 	  host: 'api.twitter.com',
@@ -148,24 +149,33 @@ httpGet = function(url, callback){
 	  response.on('end', function(){
 	 	//console.log("got data: " + completeResponse);
 		dataObj =  JSON.parse(completeResponse);
-		callback(dataObj);	 
+		callback(dataObj, param);	 
 	   });
 	  
 	});	
 };
 
-TwitterProcessor.prototype.processFollowers = function(username){
-	httpGet('/1/followers/ids.json?screen_name=' + username, this.getFollowerData);
+TwitterProcessor.prototype.processFollowers = function(username, cursor){
+	//var cursor = cursor || -1;
+	var cursor = 1405333766762446000; // marked the latest processed cursor
+	httpGet('/1/followers/ids.json?cursor='+cursor+'&screen_name=' + username, this.getFollowerData, username);
 };
 
-TwitterProcessor.prototype.getFollowerData = function(dataObj){
-	var	ids = dataObj["ids"];	
 
-	var l =  5000;//ids.length;
+TwitterProcessor.prototype.getFollowerData = function(dataObj, username){
 	
-	for(var i=100; i<l;i=i+100)
+	var	ids = dataObj["ids"];	
+	var l = ids.length;
+	
+	var cursor = dataObj["next_cursor"];
+	if(cursor){
+		print (cursor);
+		TwitterProcessor.prototype.processFollowers(username, cursor);
+	}
+	
+	for(var i=0; i<l;i=i+100)
 	{
-		var current = ids.splice(i, 100);
+		var current = ids.splice(0, 100);  // Getting user data for 100 IDs, since up to 10o IDs are allowed per request
 		setTimeout(httpGet('/1/users/lookup.json?user_id='+current.toString()+'&include_entities=false',TwitterProcessor.prototype.saveFollowers),3000);	
 	}
 
@@ -225,13 +235,13 @@ function print(str){
 }
 
 TwitterProcessor.prototype.getStreamingAPI = function(idstr){
-
+	print ('Tracking: ' + '/1/statuses/filter.json?follow='+idstr);
 	var options = {
 	  host:    'stream.twitter.com',
       port:    443,
-      //path:    '/1/statuses/filter.json?follow='+idstr, //can follow up to 5,000 names per API docs
-      path:    '/1/statuses/filter.json?track=nyc',
-      headers: {"Authorization": "Basic " + new Buffer('ntanya' + ":" + 'molly123').toString('base64')},
+      path:    '/1/statuses/filter.json?follow='+idstr, //can follow up to 5,000 names per API docs
+      //path:    '/1/statuses/filter.json?track=nyc',
+      headers: {"Authorization": "Basic " + new Buffer('username' + ":" + 'pass').toString('base64')},
       method:  'GET'
      };
 	
