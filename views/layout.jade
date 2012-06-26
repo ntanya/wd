@@ -1,5 +1,17 @@
-!!!
-html
+!!! 5
+html(lang="en")
   head
-    title
-  body!= body
+    title Super App
+    script(src='http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js')
+    script(src='/javascripts/script.js')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    div#nav
+      ul
+        li 
+          a(href='/trends/') Trends
+        li
+          a(href='/users/') Users
+        li
+          a(href='/seeds/') Seeds   
+    div!= body

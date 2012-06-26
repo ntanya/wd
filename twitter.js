@@ -58,13 +58,46 @@ TwitterProcessor.prototype.dbInc = function(colName, field){
 /*------------- app interaction functions -----------------*/
 
 TwitterProcessor.prototype.getTrends = function(callback){
-	this.getCollection('tweets', function(error, coll){
+	this.getCollection('tweets1', function(error, coll){
 		if(error) callback (error);
 		else{
-			coll.find({}, {_id:0}).sort({count:-1}).toArray(function(error,results){
+			coll.find({count:{$gt:10}},{_id:0}).sort({count:-1}).toArray(function(error,results){
+			//coll.group( { key:{tag:true, tag_date:true}, initial: {sum:0}, reduce: function(doc, prev) {prev.sum += doc.count} }).toArray(function(error, results){					
+			    if(error) callback(error);
+				else{
+					//print(results);
+					callback(null,results);
+				}
+			});
+		}
+	});
+};
+
+TwitterProcessor.prototype.getTrends_mr = function(callback){
+	this.getCollection('tweets1', function(error, coll){
+		if(error) callback (error);
+		else{
+			//coll.find({}, {_id:0}).sort({count:-1}).toArray(function(error,results){
+			//coll.group( { key:{tag:true, tag_date:true}, initial: {sum:0}, reduce: function(doc, prev) {prev.sum += doc.count} }).toArray(function(error, results){		
+			coll.mapReduce(
+			//map
+			function(){
+				emit(this.tag, {tag_date: this.tag_date, count:this.count});
+			},
+			// reduce
+			function(key, values){
+				var obj = {value: []};
+				for(var i in values){
+					obj.value.push({tag_date:values[i].tag_date, count:values[i].count});
+				}
+				return obj;
+			},
+			{out:{inline:1}},
+			function(error, results, stats)
+			{
 				if(error) callback(error);
 				else{
-					print(results);
+					//print(results);
 					callback(null,results);
 				}
 			});
@@ -87,6 +120,31 @@ TwitterProcessor.prototype.getUsers = function(callback){
 		}
 	});
 };
+
+TwitterProcessor.prototype.getLeads = function(callback){
+	this.getCollection('leads', function(error, coll){
+		if(error) callback (error);
+		else{
+			coll.find({}, {_id:0}).sort({followers_count:-1}).toArray(function(error,results){
+				if(error) callback(error);
+				else{
+					print(results);
+					callback(null,results);
+				}
+			});
+		}
+	});
+};
+
+TwitterProcessor.prototype.updateUserMonitorStatus = function(user, value){
+	this.getCollection('twitter_users', function(error, coll){
+		if(error) callback(error);
+		else{
+			coll.update({'screen_name':user},{$set:{monitor:value}});
+			//coll.update({tag:field, tag_date:today},{$inc: {count : 1}},{upsert:true});
+		}
+	});
+}
 
 /*-------------- data processing functions ------------------- */
 
@@ -206,6 +264,7 @@ TwitterProcessor.prototype.getUserIds = function(callback){
 		}
 	});
 };
+
 
 TwitterProcessor.prototype.saveTweets = function(tweet){
 	/*clients.forEach (client) ->

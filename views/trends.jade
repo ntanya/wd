@@ -1,20 +1,29 @@
-link(rel='stylesheet', href='/stylesheets/style.css')
 script(type='text/javascript')
     var data =!{JSON.stringify(trends)}
-    
-    
-script(src='http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js')
-script(src='/javascripts/script.js')
-h1
-#trends
-    - each trend in trends
-      div
-        p
-          span(id=trend.tag,class='tag') #{trend.tag}
-          if(trend.tag_date == '6/20/2012')
-            span.yesterday= trend.count
-            span.today
-          else
-            span.yesterday
-            span.today= trend.count
-          
+script(src='/javascripts/trends.js')    
+
+
+h1 Trends
+table#trends
+  tr.header
+     td Tag
+     td Today
+     td 1 day ago
+     td 2 days ago
+  each item in trends
+    tr
+     td=item.tag
+     - if(item.tag_date == '6/26/2012')
+         td=item.count
+       else
+         td
+     - if(item.tag_date == '6/25/2012')
+         td=item.count
+       else
+         td
+     - if(item.tag_date == '6/22/2012')
+         td=item.count
+       else
+         td  
+     
+         

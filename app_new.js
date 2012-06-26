@@ -10,6 +10,7 @@ var app = module.exports = express.createServer();
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
+  app.set('view options', {layout: true});
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   //app.use(require('stylus').middleware({ src: __dirname + '/public' }));
@@ -46,6 +47,18 @@ app.get('/trends', function(req, res){
 	
 	);
 });
+
+// AJAX request to set "monitor" bit in users collection
+app.get('/users/updateMonitor/', function(req, res){
+	var user = req.query.username;
+	var val = req.query.value;
+	
+	twitterProcessor.updateUserMonitorStatus(user,val, function(error, status){
+	}
+	
+	);
+});
+
 // Users page
 app.get('/users', function(req, res){
 	twitterProcessor.getUsers( function(error, userData){
@@ -54,9 +67,23 @@ app.get('/users', function(req, res){
     			}
        		});		
 		}
-	
 	);
 });
+
+
+// Users page
+app.get('/seeds', function(req, res){
+	twitterProcessor.getLeads( function(error, userData){
+			res.render('leads.jade',{ locals: {
+   				   users:userData 
+    			}
+       		});		
+		}
+	);
+});
+
+
+
 // Process influencer, get influencer twitter name from the query string
 app.get('/find/:id', function(req, res){
     

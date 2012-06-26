@@ -1,13 +1,12 @@
-h1 Users
-table#users
+h1 Seeds
+table#leads
   tr.header
      td Username
      td Name
      td Profile pic
      td Follower count
-     td Following
+     td Location
      td Description
-     td Monitor
   each user in users
      tr
         td 
@@ -16,12 +15,7 @@ table#users
         td 
           img(src=user.profile_image_url, width='48px')
         td #{user.followers_count}
-        td beiber
+        td #{user.location}
         td #{user.description}
-        td
-         - if (user.monitor=='true')
-             input(type="checkbox",class="monitor",id=user.screen_name,checked)
-         - else
-             input(type="checkbox",class="monitor",id=user.screen_name) 
          
       
