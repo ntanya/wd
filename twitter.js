@@ -51,6 +51,7 @@ TwitterProcessor.prototype.dbInc = function(colName, field){
 			var t = new Date();
 			var today = (t.getMonth()+1) + '/' + t.getDate() + '/' + t.getFullYear();
 			coll.update({tag:field, tag_date:today},{$inc: {count : 1}},{upsert:true});
+			coll.update({tag:field, tag_date:today},{$: {count : 1}},{upsert:true});
 		}
 	});
 };
@@ -148,13 +149,14 @@ TwitterProcessor.prototype.updateUserMonitorStatus = function(user, value){
 
 /*-------------- data processing functions ------------------- */
 
-TwitterProcessor.prototype.processLead = function(user){
-	 httpGet('/1/users/show.json?screen_name=' + user, this.saveLead);
+TwitterProcessor.prototype.processLead = function(demo,user){
+	 httpGet('/1/users/show.json?screen_name=' + user, this.saveLead,demo);
 }
 
-TwitterProcessor.prototype.saveLead = function(dataObj){
+TwitterProcessor.prototype.saveLead = function(dataObj,demo){
 	var saveObj = {
 		id: dataObj["id"],
+		demo:demo,
 		screen_name: dataObj["screen_name"],
 		created_at: dataObj["created_at"],
 		description: dataObj["description"],
@@ -169,7 +171,7 @@ TwitterProcessor.prototype.saveLead = function(dataObj){
 	// Only save people with more than 10000 followers
 	if(dataObj["followers_count"] > 10000){
 		TwitterProcessor.prototype.dbSave('leads', saveObj);
-		TwitterProcessor.prototype.processFollowers(dataObj['screen_name']);
+		//TwitterProcessor.prototype.processFollowers(dataObj['screen_name']);
     }
 };
 

@@ -9,9 +9,18 @@ html(lang="en")
     div#nav
       ul
         li 
-          a(href='/trends/') Trends
+          if(currentURL == '/trends/')
+            a(href='/trends/').current Trends
+          else
+            a(href='/trends/') Trends
         li
-          a(href='/users/') Users
+          if(currentURL == '/users/')
+             a(href='/users/').current Users
+          else
+             a(href='/users/') Users
         li
-          a(href='/seeds/') Seeds   
+          if(currentURL == '/seeds/')
+             a(href='/seeds/').current Seeds 
+          else
+             a(href='/seeds/') Seeds   
     div!= body

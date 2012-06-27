@@ -1,0 +1,13 @@
+h1 Add new seed
+
+form( method="get", action="/seeds/process")
+ div
+  span Username :
+  input(type="text", name="username", id="username")
+ div
+  span Demo :
+  select(name='demo')
+    option(value='teens') Teens
+    option(value='moms') Moms
+ div#submit
+  input(type="submit", value="submit")

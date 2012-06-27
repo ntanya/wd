@@ -40,7 +40,8 @@ app.get('/', function(req, res){
 app.get('/trends', function(req, res){
 	twitterProcessor.getTrends( function(error, trendData){
 			res.render('trends.jade',{ locals: {
-   				   trends:trendData 
+   				   trends:trendData,
+   				   currentURL:'/trends/' 
     			}
        		});		
 		}
@@ -63,7 +64,8 @@ app.get('/users/updateMonitor/', function(req, res){
 app.get('/users', function(req, res){
 	twitterProcessor.getUsers( function(error, userData){
 			res.render('users.jade',{ locals: {
-   				   users:userData 
+   				   users:userData,
+   				   currentURL:'/users/' 
     			}
        		});		
 		}
@@ -71,21 +73,41 @@ app.get('/users', function(req, res){
 });
 
 
-// Users page
+// Seeds page
 app.get('/seeds', function(req, res){
 	twitterProcessor.getLeads( function(error, userData){
 			res.render('leads.jade',{ locals: {
-   				   users:userData 
+   				   users:userData,
+   				   currentURL:'/seeds/' 
     			}
        		});		
 		}
 	);
+});
+
+// Add seed
+app.get('/seeds/add', function(req, res){
+	res.render('add_lead.jade',{ locals: {
+   		currentURL:'/seeds/' 
+        }
+    });	
+});
+
+// Process lead(seed)
+app.get('/seeds/process', function(req, res){
+	var user = req.query.username;
+	var demo = req.query.demo;
+	
+	twitterProcessor.processLead(demo,user,function(error, userData){
+		//res.redirect('/seeds/');	
+	});
+	res.redirect('/seeds/');
 });
 
 
 
 // Process influencer, get influencer twitter name from the query string
-app.get('/find/:id', function(req, res){
+app.get('/users/find/:id', function(req, res){
     
 	var user = req.params.id;
 	
