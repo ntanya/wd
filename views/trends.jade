@@ -2,28 +2,25 @@ script(type='text/javascript')
     var data =!{JSON.stringify(trends)}
 script(src='/javascripts/trends.js')    
 
-
 h1 Trends
 table#trends
   tr.header
-     td Tag
-     td Today
+     td 
+       a(href='/trends?sort=tag') Tag
+     td 
+       a(href='/trends?sort=tag_date') Today
      td 1 day ago
      td 2 days ago
+     td 3 days ago
+     td 4 days ago
   each item in trends
-    tr
-     td=item.tag
-     - if(item.tag_date == '6/26/2012')
-         td=item.count
-       else
-         td
-     - if(item.tag_date == '6/25/2012')
-         td=item.count
-       else
-         td
-     - if(item.tag_date == '6/22/2012')
-         td=item.count
-       else
-         td  
-     
-         
+    - var st = item.tag
+    - var len = st.length
+    - var myst = st.substr(1,len)
+    tr(id=myst)
+     td(class="tag")=item.tag
+     td.today
+     td.1d
+     td.2d
+     td.3d
+     td.4d

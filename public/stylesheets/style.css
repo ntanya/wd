@@ -6,8 +6,21 @@ a {
   color: #00B7FF;
 }
 
-
+td{padding:2px 5px;}
 tr.header td{font-weight:bold;background-color:#eee;padding:7px;}
+table#trends td{border:0;text-align:center;width:65px;}
+table#trends td.tag{text-align:left;}
+
+table#trends td.newTrend{font-weight:bold;background:transparent url('/images/fire.gif') 90% 50% no-repeat;}
+table#trends td.lowerTrend{ background:transparent url('/images/blue_arr.gif') 90% 50% no-repeat;}
+table#trends td.higherTrend{ background:transparent url('/images/orange_arr.gif') 90% 50% no-repeat;}
+
+tr:nth-child(even) {
+  background-color: #fff;
+}
+tr:nth-child(odd) {
+  background-color: #EBF4FC;
+}
 
 #nav ul{text-align:left;border-bottom:1px solid #ccc; list-style-type:none;padding:10px 10px;}
 #nav ul li{display:inline;}

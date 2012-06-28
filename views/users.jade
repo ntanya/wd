@@ -3,9 +3,9 @@ table#users
   tr.header
      td Username
      td Name
+     td Demo
      td Profile pic
      td Follower count
-     td Following
      td Description
      td Monitor
   each user in users
@@ -13,10 +13,10 @@ table#users
         td 
           a(href='http://twitter.com/#!/' + user.screen_name) #{user.screen_name}
         td #{user.name} 
+        td #{user.demo}
         td 
           img(src=user.profile_image_url, width='48px')
         td #{user.followers_count}
-        td beiber
         td #{user.description}
         td
          - if (user.monitor=='true')

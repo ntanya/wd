@@ -38,6 +38,9 @@ app.get('/', function(req, res){
 });
 // Trends page
 app.get('/trends', function(req, res){
+	var sort = req.query.sort || 'count';
+	var order = req.query.order || '-1';
+	
 	twitterProcessor.getTrends( function(error, trendData){
 			res.render('trends.jade',{ locals: {
    				   trends:trendData,
@@ -46,7 +49,7 @@ app.get('/trends', function(req, res){
        		});		
 		}
 	
-	);
+	,sort,order);
 });
 
 // AJAX request to set "monitor" bit in users collection
