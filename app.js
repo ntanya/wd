@@ -33,13 +33,16 @@ var twitterProcessor = new TwitterProcessor();
 // Home page
 app.get('/', function(req, res){
 	req.session.demo = 'teens';
+	twitterProcessor.setDemo('teens');
 	res.redirect('/trends');
+	
 });
 
 // Process tweets
 app.get('/tweets', function(req, res){
 	
-	var currDemo = req.session.demo;
+	twitterProcessor.setDemo('teens');
+
 	if (req.url != '/favicon.ico') {
 	   twitterProcessor.processTweets();
 	}
@@ -80,6 +83,7 @@ app.get('/users/updateMonitor/', function(req, res){
 app.get('/users', function(req, res){
 	twitterProcessor.getUsers( function(error, userData){
 			res.render('users.jade',{ locals: {
+				   userCount: userData.length,
    				   users:userData,
    				   currentURL:'/users/' 
     			}
@@ -93,6 +97,7 @@ app.get('/users', function(req, res){
 app.get('/seeds', function(req, res){
 	twitterProcessor.getLeads( function(error, userData){
 			res.render('leads.jade',{ locals: {
+				   userCount: userData.length,
    				   users:userData,
    				   currentURL:'/seeds/' 
     			}

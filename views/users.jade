@@ -1,4 +1,5 @@
 h1 Users
+p Total Users: #{userCount}
 table#users
   tr.header
      td Username
@@ -7,6 +8,7 @@ table#users
      td Profile pic
      td Follower count
      td Description
+     td Location
      td Monitor
   each user in users
      tr
@@ -18,6 +20,7 @@ table#users
           img(src=user.profile_image_url, width='48px')
         td #{user.followers_count}
         td #{user.description}
+        td #{user.location}
         td
          - if (user.monitor=='true')
              input(type="checkbox",class="monitor",id=user.screen_name,checked)
