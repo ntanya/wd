@@ -8,6 +8,8 @@ var tagCounter = [];
 var app = module.exports = express.createServer();
 
 app.configure(function(){
+  app.use(express.cookieParser());
+  app.use(express.session({secret: 'secret_key'}));
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.set('view options', {layout: true});
@@ -40,6 +42,7 @@ app.get('/', function(req, res){
 app.get('/trends', function(req, res){
 	var sort = req.query.sort || 'count';
 	var order = req.query.order || '-1';
+	req.session.demo = 'teens';
 	
 	twitterProcessor.getTrends( function(error, trendData){
 			res.render('trends.jade',{ locals: {
@@ -50,6 +53,7 @@ app.get('/trends', function(req, res){
 		}
 	
 	,sort,order);
+	
 });
 
 // AJAX request to set "monitor" bit in users collection
@@ -101,10 +105,10 @@ app.get('/seeds/process', function(req, res){
 	var user = req.query.username;
 	var demo = req.query.demo;
 	
-	twitterProcessor.processLead(demo,user,function(error, userData){
-		//res.redirect('/seeds/');	
+	twitterProcessor.processLead(demo,user,function(error){
+		res.redirect('/seeds/');	
 	});
-	res.redirect('/seeds/');
+	
 });
 
 
@@ -122,6 +126,12 @@ app.get('/users/find/:id', function(req, res){
  
 });
 
+// Set dynamic helpers
+app.dynamicHelpers({
+  session: function(req, res){
+    return req.session;
+  }
+});
 
 // Start server
 var port = process.env.PORT || 3000;

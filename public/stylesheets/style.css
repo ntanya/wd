@@ -1,10 +1,9 @@
-body {
-  font: 11px "Lucida Grande", Helvetica, Arial, sans-serif;margin:20px;
-}
+body {font: 11px "Lucida Grande", Helvetica, Arial, sans-serif;margin:20px;}
+a {color: #00B7FF;}
 
-a {
-  color: #00B7FF;
-}
+p#demo{float:right;font-weight:bold;}
+div#container{border:1px solid #ccc;padding:10px;margin-top:-11px;border-top:0;background:#fff;}
+
 
 td{padding:2px 5px;}
 tr.header td{font-weight:bold;background-color:#eee;padding:7px;}

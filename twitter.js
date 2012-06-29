@@ -12,6 +12,8 @@ String.prototype.trim = function() {
 	return this.replace(/^\s+|\s+$/g,"");
 }
 
+function print(str){console.log(str);}
+
 /*-------- sort helpers --------*/
 function sortObject(o) {
     var sorted = {},
@@ -185,7 +187,7 @@ TwitterProcessor.prototype.getLeads = function(callback){
 			coll.find({}, {_id:0}).sort({followers_count:-1}).toArray(function(error,results){
 				if(error) callback(error);
 				else{
-					print(results);
+					//print(results);
 					callback(null,results);
 				}
 			});
@@ -204,11 +206,11 @@ TwitterProcessor.prototype.updateUserMonitorStatus = function(user, value){
 
 /*-------------- data processing functions ------------------- */
 
-TwitterProcessor.prototype.processLead = function(demo,user){
-	 httpGet('/1/users/show.json?screen_name=' + user, this.saveLead,demo);
+TwitterProcessor.prototype.processLead = function(demo,user,callback){
+	 httpGet('/1/users/show.json?screen_name=' + user, this.saveLead, demo,callback);
 }
 
-TwitterProcessor.prototype.saveLead = function(dataObj,demo){
+TwitterProcessor.prototype.saveLead = function(dataObj,demo,callback){
 	var saveObj = {
 		id: dataObj["id"],
 		demo:demo,
@@ -225,7 +227,7 @@ TwitterProcessor.prototype.saveLead = function(dataObj,demo){
 	};
 	// Only save people with more than 10000 followers
 	if(dataObj["followers_count"] > 10000){
-		//TwitterProcessor.prototype.dbSave('leads', saveObj);
+		TwitterProcessor.prototype.dbSave('leads', saveObj,callback);
 		TwitterProcessor.prototype.processFollowers(dataObj['screen_name']);
     }
 };
@@ -270,11 +272,8 @@ httpGet = function(url, callback, param){
 	  port: 80,
 	  path: url
 	};
+	print(url);
 	var dataObj = null;
-	
-	print('url: ' + url);
-	//print('callback: ' + callback);
-	
 	var request = http.get(options, function(result) {
 	  console.log("Got response: " + result.statusCode);
 	}).on('error', function(e) {
@@ -370,10 +369,6 @@ TwitterProcessor.prototype.saveTweets = function(tweet){
 	       	}
 	    }
 	}
-}
-
-function print(str){
-	console.log(str);
 }
 
 TwitterProcessor.prototype.getStreamingAPI = function(idstr){
