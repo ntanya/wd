@@ -389,7 +389,7 @@ TwitterProcessor.prototype.getFollowerData = function(error, dataObj, username){
 
 TwitterProcessor.prototype.processTweets = function(){
 	this.processRunning = true;
-	//this.getUserIds(this.getStreamingAPI, this);
+	this.getUserIds(this.getStreamingAPI, this);
 };
 
 TwitterProcessor.prototype.getUserIds = function(callback, self){
@@ -495,12 +495,16 @@ TwitterProcessor.prototype.getStreamingAPI = function(idstr, obj){
 	    }
 	    message = message.slice(newline + 1);
 		
+	   });
+	   
+	   response.on('end', function(){
+	   	   obj.processRunning = false;  // set flag to false on the main twitterProcessor object
 	   });	  	  
 	 });
 	 
 	 request.end();
 	 
-	 obj.processRunning = false;  // set flag to false on the main twitterProcessor object
+	
 }
 
 exports.TwitterProcessor = TwitterProcessor;
