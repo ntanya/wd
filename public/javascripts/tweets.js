@@ -1,7 +1,7 @@
 var messages = [];
 var keys = {};
 $(document).ready(function() {
-  var socket = io.connect('http://stormy-fire-6148.herokuapp.com/');
+  var socket = io.connect(config.host,{port:config.port, rememberTransport:false});
   
   
   socket.on('connect', function() {

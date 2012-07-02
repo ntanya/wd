@@ -3,10 +3,9 @@ var https   = require('https');
 var mongo   = require('mongodb');
 
 var database = null;
-var hashtags = [];
-var tagCounter = [];
+
 //var mongostr = "mongodb://localhost/dataintel";
-var mongostr = "mongodb://tanya:tanya@ds033897.mongolab.com:33897/heroku_app5667663"
+//var mongostr = "mongodb://tanya:tanya@ds033897.mongolab.com:33897/heroku_app5667663"
 
 /*---- string trim helper ----*/
 String.prototype.trim = function() {
@@ -36,7 +35,7 @@ function sortObject(o) {
 
 /*------ constructor ------------*/
 
-TwitterProcessor = function(){
+TwitterProcessor = function(mongostr){
 	mongo.connect(mongostr, {}, function(error, db)
 	{		
 		database = db;

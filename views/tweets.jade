@@ -1,5 +1,9 @@
-script(src='/javascripts/tweets.js')  
 script(src='/socket.io/socket.io.js')
+script
+  var config={};
+  config.host='#{host}';
+  config.port = '#{port}';
+script(src='/javascripts/tweets.js') 
 
 h1 Real-time Tweets
 

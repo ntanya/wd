@@ -16,17 +16,23 @@ app.configure(function(){
   //app.use(require('stylus').middleware({ src: __dirname + '/public' }));
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
+  app.set('port',process.env.PORT || 3000);
 });
+
 
 app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+  app.set('host','localhost');
+  app.set('mongostr','mongodb://localhost/dataintel');
 });
 
 app.configure('production', function(){
   app.use(express.errorHandler());
+  app.set('host', 'stormy-fire-6148.herokuapp.com');
+  app.set('mongostr','mongodb://tanya:tanya@ds033897.mongolab.com:33897/heroku_app5667663');
 });
 
-var twitterProcessor = new TwitterProcessor();
+var twitterProcessor = new TwitterProcessor(app.settings.mongostr);
 
 // Home page
 app.get('/', function(req, res){
@@ -42,7 +48,9 @@ app.get('/tweets', function(req, res){
 	twitterProcessor.setDemo('teens');
 	
   	res.render('tweets.jade',{ locals: {
-   		  currentURL:'/tweets/' 
+   		  currentURL:'/tweets/',
+   		  host: app.settings.host, 
+   		  port:app.settings.port
     	}
     });	
 });
@@ -143,9 +151,8 @@ app.dynamicHelpers({
 });
 
 // Start server
-var port = process.env.PORT || 3000;
-app.listen(port, function() {
-  console.log("Listening on " + port);
+app.listen(app.settings.port, function() {
+  console.log("Listening on " + app.settings.port);
 });
 
 
