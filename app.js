@@ -32,7 +32,7 @@ app.configure('production', function(){
   app.set('mongostr','mongodb://tanya:tanya@ds033897.mongolab.com:33897/heroku_app5667663');
 });
 
-var twitterProcessor = new TwitterProcessor(app.settings.mongostr);
+var twitterProcessor = new TwitterProcessor();
 
 // Home page
 app.get('/', function(req, res){
