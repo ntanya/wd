@@ -1,7 +1,7 @@
 var messages = [];
 var keys = {};
 $(document).ready(function() {
-  var socket = io.connect(config.host,{port:config.port, rememberTransport:false});
+  var socket = io.connect();
   
   
   socket.on('connect', function() {
