@@ -1,0 +1,24 @@
+{
+  "name": "test",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "2.5.8",
+    "jade": ">= 0.0.1",
+    "stylus": ">= 0.0.1",
+    "mongodb": ">= 0.9.6-7",
+    "connect": "1.8.5"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": "*"
+  },
+  "author": "Tanya Nam",
+  "description": "Test",
+  "repository": {
+    "url": ""
+  },
+    "engines": {
+    "node": "0.6.x"
+  }
+}
