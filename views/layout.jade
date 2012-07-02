@@ -23,5 +23,11 @@ html(lang="en")
           if(currentURL == '/seeds/')
              a(href='/seeds/').current Seeds 
           else
-             a(href='/seeds/') Seeds   
-    div#container!= body
+             a(href='/seeds/') Seeds 
+        li
+          if(currentURL == '/tweets/')
+             a(href='/tweets/').current Tweets 
+          else
+             a(href='/tweets/') Tweets   
+    div#container
+      div#body!= body

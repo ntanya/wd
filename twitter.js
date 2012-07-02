@@ -6,7 +6,7 @@ var database = null;
 var hashtags = [];
 var tagCounter = [];
 var mongostr = "mongodb://localhost/dataintel";
-var mongostr = "mongodb://tanya:tanya@ds033897.mongolab.com:33897/heroku_app5667663"
+//var mongostr = "mongodb://tanya:tanya@ds033897.mongolab.com:33897/heroku_app5667663"
 
 /*---- string trim helper ----*/
 String.prototype.trim = function() {
@@ -14,6 +14,7 @@ String.prototype.trim = function() {
 }
 
 function print(str){console.log(str);}
+
 
 /*-------- sort helpers --------*/
 function sortObject(o) {
@@ -43,6 +44,7 @@ TwitterProcessor = function(){
 			console.log('Error connecting to MongoLab');			
 		});	
 	});
+	this.processRunning = false;
 }
 
 TwitterProcessor.prototype.setDemo = function(demo){
@@ -74,9 +76,8 @@ TwitterProcessor.prototype.dbSave = function(collName, data, callback){
 	});
 };
 
-TwitterProcessor.prototype.dbIncTweets = function(field){
-    var demo =  'teens';   // make sure this is dynamic and coming from object
- 
+TwitterProcessor.prototype.dbIncTweets = function(field, demo){
+
 	this.getCollection('tweets1', function(error, coll){
 		if(error) callback (error);
 		else{
@@ -388,24 +389,24 @@ TwitterProcessor.prototype.getFollowerData = function(error, dataObj, username){
 
 
 TwitterProcessor.prototype.processTweets = function(){
-	this.getUserIds(this.getStreamingAPI);
+	this.processRunning = true;
+	this.getUserIds(this.getStreamingAPI, this);
 };
 
-TwitterProcessor.prototype.getUserIds = function(callback){
+TwitterProcessor.prototype.getUserIds = function(callback, self){
 	this.getCollection('twitter_users', function(error, coll){
 		if(error) callback (error);
 		else{
 			coll.find({},{id:1, _id:0}).toArray(function(error, results) {
 	            if( error ) callback(error)
 	            else{
-	          	   console.log ('got results');
 	          	   var ids = [];
 				   for(item in results)
 				   {
 						ids.push(results[item].id);
 				   }
 				   str = ids.join();
-	          	   callback(str);
+	          	   callback(str, self);
 	            }
 	        });			
 		}
@@ -413,12 +414,8 @@ TwitterProcessor.prototype.getUserIds = function(callback){
 };
 
 
-TwitterProcessor.prototype.saveTweets = function(tweet){
-	/*clients.forEach (client) ->
-	  if(client && !client.disconnected){
-	     client.send(JSON.stringify(data));
-	  }
-	*/
+TwitterProcessor.prototype.saveTweets = function(tweet, demo){
+	 
 	var regex = /(^|\s)#(\w+)/g;
 	var matchedTags =  tweet.match(regex);
 	
@@ -427,16 +424,19 @@ TwitterProcessor.prototype.saveTweets = function(tweet){
 	    {
 	    	var tag = matchedTags[i].toLowerCase().trim();
 	    	
-	    	if(tag.length>5){
+	    	if(tag.length>5 && tag.length < 50){
 	    		console.log('found tag: ' + tag);
-				this.dbIncTweets(tag);        	
+				this.dbIncTweets(tag, demo);        	
 	       	}
 	    }
 	}
 }
 
-TwitterProcessor.prototype.getStreamingAPI = function(idstr){
-	print ('Tracking: ' + '/1/statuses/filter.json?follow='+idstr);
+TwitterProcessor.prototype.getStreamingAPI = function(idstr, obj){
+
+	//print ('Tracking: ' + '/1/statuses/filter.json?follow='+idstr);
+	var demo = obj.getDemo(); 
+	
 	var options = {
 	  host:    'stream.twitter.com',
       port:    443,
@@ -482,7 +482,16 @@ TwitterProcessor.prototype.getStreamingAPI = function(idstr){
 	      }
 	      if(data !== null){
 	      	 var txt = new String(data.text);
-			 TwitterProcessor.prototype.saveTweets(txt);
+			 TwitterProcessor.prototype.saveTweets(txt, demo);
+			 
+			 // send info to sockets
+			 obj.clients.forEach(function(client){
+				if(client && !client.disconnected){
+			       client.send(JSON.stringify(data));
+			       //client.send('Found tag: ' + txt)
+			    }  	  
+			 });
+			 
 	      }
 	    }
 	    message = message.slice(newline + 1);
@@ -490,7 +499,9 @@ TwitterProcessor.prototype.getStreamingAPI = function(idstr){
 	   });	  	  
 	 });
 	 
-	 request.end();		
+	 request.end();
+	 
+	 obj.processRunning = false;  // set flag to false on the main twitterProcessor object
 }
 
 exports.TwitterProcessor = TwitterProcessor;

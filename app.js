@@ -2,8 +2,6 @@ var express = require('express');
 var connect = require('connect');
 var TwitterProsessor = require('./twitter').TwitterProcessor;
 
-var hashtags = [];
-var tagCounter = [];
 
 var app = module.exports = express.createServer();
 
@@ -42,12 +40,11 @@ app.get('/', function(req, res){
 app.get('/tweets', function(req, res){
 	
 	twitterProcessor.setDemo('teens');
-
-	if (req.url != '/favicon.ico') {
-	   twitterProcessor.processTweets();
-	}
 	
-  	res.send('getting tweets…'); 
+  	res.render('tweets.jade',{ locals: {
+   		  currentURL:'/tweets/' 
+    	}
+    });	
 });
 
 // Trends page
@@ -126,6 +123,17 @@ app.get('/seeds/process', function(req, res){
 });
 
 
+/*--- cron --- */
+var cronJob = require('cron').CronJob;
+new cronJob('0 * * * * *', function(){
+    console.log('------------------------- Cron initiated');
+    if(!twitterProcessor.processRunning && twitterProcessor.getDemo()){
+  		twitterProcessor.processTweets();
+  	}
+	
+}, null, true);
+
+
 
 // Set dynamic helpers
 app.dynamicHelpers({
@@ -139,3 +147,14 @@ var port = process.env.PORT || 3000;
 app.listen(port, function() {
   console.log("Listening on " + port);
 });
+
+
+/*----- sockets ---------- */
+twitterProcessor.clients = [];
+
+io = require('socket.io').listen(app);
+io.sockets.on('connection', function (socket){
+  twitterProcessor.clients.push(socket);
+  console.log("socket client connected");
+});
+

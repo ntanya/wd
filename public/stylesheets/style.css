@@ -3,6 +3,7 @@ a {color: #00B7FF;}
 
 p#demo{float:right;font-weight:bold;}
 div#container{border:1px solid #ccc;padding:10px;margin-top:-11px;border-top:0;background:#fff;}
+div#container div#body{width:90%;}
 
 
 td{padding:2px 5px;}
@@ -26,3 +27,6 @@ tr:nth-child(odd) {
 #nav ul li a{font-weight:bold;border:1px solid #ccc; text-decoration:none;padding:10px 20px;border-bottom:none;margin-right:5px;margin-bottom:1px;background-color:#eee}
 #nav ul li a.current{background-color:#fff;border-bottom:1px solid #fff;}
 #nav ul li a:hover{color:#000;background-color:#eee;}
+
+div#tweets{float:left; width:500px; overflow:hidden;}
+div#tags{float:left; width:250px; overflow:hidden;margin-left:50px;}
