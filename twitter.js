@@ -6,6 +6,7 @@ var database = null;
 var hashtags = [];
 var tagCounter = [];
 var mongostr = "mongodb://localhost/dataintel";
+var mongostr = "mongodb://ds033897.mongolab.com:33897/heroku_app5667663"
 
 /*---- string trim helper ----*/
 String.prototype.trim = function() {
