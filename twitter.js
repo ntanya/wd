@@ -389,7 +389,7 @@ TwitterProcessor.prototype.getFollowerData = function(error, dataObj, username){
 
 TwitterProcessor.prototype.processTweets = function(){
 	this.processRunning = true;
-	this.getUserIds(this.getStreamingAPI, this);
+	//this.getUserIds(this.getStreamingAPI, this);
 };
 
 TwitterProcessor.prototype.getUserIds = function(callback, self){

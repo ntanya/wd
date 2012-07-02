@@ -135,6 +135,7 @@ app.get('/seeds/process', function(req, res){
 var cronJob = require('cron').CronJob;
 new cronJob('0 * * * * *', function(){
     console.log('------------------------- Cron called');
+    console.log('processRunning: ' + twitterProcessor.processRunning + ', getDemo: ' + twitterProcessor.getDemo());
     if(!twitterProcessor.processRunning && twitterProcessor.getDemo()){
     	console.log('------------------------- Cron running');
   		twitterProcessor.processTweets();
