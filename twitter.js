@@ -441,7 +441,7 @@ TwitterProcessor.prototype.getStreamingAPI = function(idstr, obj){
       port:    443,
       path:    '/1/statuses/filter.json?follow='+idstr, //can follow up to 5,000 names per API docs
       //path:    '/1/statuses/filter.json?track=nyc',
-      headers: {"Authorization": "Basic " + new Buffer('ntanya' + ":" + 'leshik').toString('base64')},
+      headers: {"Authorization": "Basic " + new Buffer('username' + ":" + 'password').toString('base64')},
       method:  'GET'
      };
 	
