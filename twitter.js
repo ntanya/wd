@@ -256,7 +256,7 @@ TwitterProcessor.prototype.saveLead = function(error,dataObj,demo,callback){
 		};
 		// Only save people with more than 10000 followers
 		if(dataObj["followers_count"] > 10000){
-			//TwitterProcessor.prototype.dbSave('leads', saveObj,callback);
+			TwitterProcessor.prototype.dbSave('leads', saveObj,callback);
 			TwitterProcessor.prototype.processFollowers(dataObj['screen_name']);
 	    }
     }
