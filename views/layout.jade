@@ -6,28 +6,33 @@ html(lang="en")
     script(src='/javascripts/script.js')
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    p#demo Working with demo: #{session.demo}
-    div#nav
-      ul
-        li 
-          if(currentURL == '/trends/')
-            a(href='/trends/').current Trends
-          else
-            a(href='/trends/') Trends
-        li
-          if(currentURL == '/users/')
-             a(href='/users/').current Users
-          else
-             a(href='/users/') Users
-        li
-          if(currentURL == '/seeds/')
-             a(href='/seeds/').current Seeds 
-          else
-             a(href='/seeds/') Seeds 
-        li
-          if(currentURL == '/tweets/')
-             a(href='/tweets/').current Tweets 
-          else
-             a(href='/tweets/') Tweets   
-    div#container
-      div#body!= body
+    - if(currentURL == '/register')
+      div#register
+        div#body!=body
+    - else
+    
+      p#demo Working with demo: #{session.demo}
+      div#nav
+        ul
+          li 
+            if(currentURL == '/trends/')
+              a(href='/trends/').current Trends
+            else
+              a(href='/trends/') Trends
+          li
+            if(currentURL == '/users/')
+              a(href='/users/').current Users
+            else
+              a(href='/users/') Users
+          li
+            if(currentURL == '/seeds/')
+              a(href='/seeds/').current Seeds 
+            else
+              a(href='/seeds/') Seeds 
+          li
+            if(currentURL == '/tweets/')
+              a(href='/tweets/').current Tweets 
+            else
+              a(href='/tweets/') Tweets   
+        div#container
+         div#body!= body

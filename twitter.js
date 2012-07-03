@@ -148,7 +148,7 @@ TwitterProcessor.prototype.getTrends = function(callback,sort,order){
 
 			}
 			else{
-				coll.find({count:{$gt:10},tag_date:{$gt:d4}},{_id:0}).sort({tag_date:-1,count:-1}).toArray(function(error,results){
+				coll.find({count:{$gt:10},tag_date:{$gt:d4}},{_id:0}).sort({count:-1,tag_date:-1}).toArray(function(error,results){
 				//coll.group( { key:{tag:true, tag_date:true}, initial: {sum:0}, reduce: function(doc, prev) {prev.sum += doc.count} }).toArray(function(error, results){					
 				    if(error) callback(error);
 					else callback(null,results);
