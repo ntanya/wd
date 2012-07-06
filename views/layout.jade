@@ -11,7 +11,14 @@ html(lang="en")
         div#body!=body
     - else
     
-      p#demo Working with demo: #{session.demo}
+      div#demo Working with demo: 
+        span#currentDemo #{session.demo} 
+        a#changedemo(href='#', style='margin-left:10px;') change
+        div#demobox(class='classHidden') Change demo: 
+          select#newDemo
+            option(value='teens') teens
+            option(value='moms') moms
+          input#doChangeDemo(type='button', value='OK')
       div#nav
         ul
           li 
@@ -26,9 +33,9 @@ html(lang="en")
               a(href='/users/') Users
           li
             if(currentURL == '/seeds/')
-              a(href='/seeds/').current Seeds 
+              a(href='/seeds/').current Influencers 
             else
-              a(href='/seeds/') Seeds 
+              a(href='/seeds/') Influencers 
           li
             if(currentURL == '/tweets/')
               a(href='/tweets/').current Tweets 

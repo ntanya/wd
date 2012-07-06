@@ -1,9 +1,18 @@
 body {font: 11px "Lucida Grande", Helvetica, Arial, sans-serif;margin:20px;}
 a {color: #00B7FF;}
 
-p#demo{float:right;font-weight:bold;}
+.classVisible{visibility:visible;}
+.classHidden{visibility:hidden;}
+
+.classDisplayBlock{display:block;}
+.classDisplayNone{display:none;}
+
+div#demo{float:right;font-weight:bold;}
+#demobox{font-weight:normal;}
 div#container{border:1px solid #ccc;padding:10px;margin-top:-11px;border-top:0;background:#fff;}
 div#container div#body{width:90%;}
+
+div#addLead{padding:10px;border:1px solid #ccc;}
 
 
 td{padding:2px 5px;}

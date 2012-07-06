@@ -89,20 +89,35 @@ app.get('/trends/chart', function(req, res){
 });
 
 
-// AJAX request to set "monitor" bit in users collection
-app.get('/users/updateMonitor/', function(req, res){
+// AJAX functions
+app.get('/users/ajax/updateMonitor/', function(req, res){
 	var user = req.query.username;
-	var val = req.query.value;
+	var val = (req.query.value==="true" || req.query.value===true)?true:false;
+	var demo = twitterProcessor.getDemo();
 	
-	twitterProcessor.updateUserMonitorStatus(user,val, function(error, status){
+	console.log('user:' + user + ', demo: ' + demo + ', value: ' + val);
+	
+	twitterProcessor.updateUserMonitorStatus(user,val,demo, function(error, status){
 	}
 	
 	);
 });
 
+app.get('/ajax/updateDemo/', function(req, res){
+	var val = req.query.value;
+	req.session.demo = val;
+	twitterProcessor.setDemo(val);
+	console.log('new demo set: ' + val);
+	res.send('ok');
+});
+
+
+
+
 // Users page
 app.get('/users', function(req, res){
-	twitterProcessor.getUsers( function(error, userData){
+	var demo = req.session.demo;
+	twitterProcessor.getUsers(demo, function(error, userData){
 			res.render('users.jade',{ locals: {
 				   userCount: userData.length,
    				   users:userData,
@@ -116,7 +131,8 @@ app.get('/users', function(req, res){
 
 // Seeds page
 app.get('/seeds', function(req, res){
-	twitterProcessor.getLeads( function(error, userData){
+    var demo = req.session.demo;	
+	twitterProcessor.getLeads(demo, function(error, userData){
 			res.render('leads.jade',{ locals: {
 				   userCount: userData.length,
    				   users:userData,
@@ -136,12 +152,12 @@ app.get('/seeds/add', function(req, res){
 });
 
 // Process lead(seed)
-app.get('/seeds/process', function(req, res){
+app.get('/leads/ajax/addLead', function(req, res){
 	var user = req.query.username;
 	var demo = req.query.demo;
 	
 	twitterProcessor.processLead(demo,user,function(error){
-		res.redirect('/seeds/');	
+		res.send('OK');	
 	});
 	
 });
@@ -223,7 +239,7 @@ new cronJob('0 * * * * *', function(){
     console.log('processRunning: ' + twitterProcessor.processRunning + ', getDemo: ' + twitterProcessor.getDemo());
     if((twitterProcessor.processRunning===false && twitterProcessor.getDemo())){
     	console.log('------------------------- Cron executing...');
-  		twitterProcessor.processTweets();
+  		//twitterProcessor.processTweets();
   	}
 	
 }, null, true);

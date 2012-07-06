@@ -4,8 +4,8 @@ var mongo   = require('mongodb');
 
 var database = null;
 
-//var mongostr = "mongodb://localhost/dataintel";
-var mongostr = "mongodb://tanya:tanya@ds033897.mongolab.com:33897/heroku_app5667663"
+var mongostr = "mongodb://localhost/dataintel";
+//var mongostr = "mongodb://tanya:tanya@ds033897.mongolab.com:33897/heroku_app5667663"
 
 /*---- string trim helper ----*/
 String.prototype.trim = function() {
@@ -109,7 +109,7 @@ TwitterProcessor.prototype.getTrends = function(callback,sort,order){
 		if(error) callback (error);
 		else{
 			var t = new Date();
-			t.setDate(t.getDate() - 4);  // get trends for only 4 days
+			t.setDate(t.getDate() - 5);  // get trends for only 4 days
 			var d4 = (t.getMonth()+1) + '/' + t.getDate() + '/' + t.getFullYear();
 
 			sortField = sort || '';
@@ -148,7 +148,7 @@ TwitterProcessor.prototype.getTrends = function(callback,sort,order){
 
 			}
 			else{
-				coll.find({count:{$gt:10},tag_date:{$gt:d4}},{_id:0}).sort({count:-1,tag_date:-1}).toArray(function(error,results){
+				coll.find({count:{$gt:10},tag_date:{$gt:d4}},{_id:0}).sort({tag_date:-1,count:-1}).toArray(function(error,results){
 				//coll.group( { key:{tag:true, tag_date:true}, initial: {sum:0}, reduce: function(doc, prev) {prev.sum += doc.count} }).toArray(function(error, results){					
 				    if(error) callback(error);
 					else callback(null,results);
@@ -192,26 +192,11 @@ TwitterProcessor.prototype.getTrends_mr = function(callback){
 };
 
 
-TwitterProcessor.prototype.getUsers = function(callback){
+TwitterProcessor.prototype.getUsers = function(demo,callback){
 	this.getCollection('twitter_users', function(error, coll){
 		if(error) callback (error);
 		else{
-			coll.find({}, {_id:0}).sort({followers_count:-1}).toArray(function(error,results){
-				if(error) callback(error);
-				else{
-					print(results);
-					callback(null,results);
-				}
-			});
-		}
-	});
-};
-
-TwitterProcessor.prototype.getLeads = function(callback){
-	this.getCollection('leads', function(error, coll){
-		if(error) callback (error);
-		else{
-			coll.find({}, {_id:0}).sort({followers_count:-1}).toArray(function(error,results){
+			coll.find({demo:demo}, {_id:0}).sort({followers_count:-1}).toArray(function(error,results){
 				if(error) callback(error);
 				else{
 					//print(results);
@@ -222,11 +207,26 @@ TwitterProcessor.prototype.getLeads = function(callback){
 	});
 };
 
-TwitterProcessor.prototype.updateUserMonitorStatus = function(user, value){
+TwitterProcessor.prototype.getLeads = function(demo, callback){
+	this.getCollection('leads', function(error, coll){
+		if(error) callback (error);
+		else{
+			coll.find({demo:demo}, {_id:0}).sort({followers_count:-1}).toArray(function(error,results){
+				if(error) callback(error);
+				else{
+					//print(results);
+					callback(null,results);
+				}
+			});
+		}
+	});
+};
+
+TwitterProcessor.prototype.updateUserMonitorStatus = function(user, value,demo){
 	this.getCollection('twitter_users', function(error, coll){
 		if(error) callback(error);
 		else{
-			coll.update({'screen_name':user},{$set:{monitor:value}});
+			coll.update({'screen_name':user,'demo':demo},{$set:{monitor:value}});
 		}
 	});
 }
@@ -234,12 +234,16 @@ TwitterProcessor.prototype.updateUserMonitorStatus = function(user, value){
 /*-------------- data processing functions ------------------- */
 
 TwitterProcessor.prototype.processLead = function(demo,user,callback){
-	 httpGet('/1/users/show.json?screen_name=' + user, this.saveLead, demo,callback);
+	httpGet('/1/users/show.json?screen_name=' + user, this.saveLead, [demo,callback]);
 }
 
-TwitterProcessor.prototype.saveLead = function(error,dataObj,demo,callback){
+TwitterProcessor.prototype.saveLead = function(error,dataObj,arr){
 	if(error){callback;}
 	else{
+		
+		var demo = arr[0];
+		var callback = arr[1];
+		//print('demo:' + demo + ',callback: ' +callback);
 		var saveObj = {
 			id: dataObj["id"],
 			demo:demo,
@@ -393,10 +397,11 @@ TwitterProcessor.prototype.processTweets = function(){
 };
 
 TwitterProcessor.prototype.getUserIds = function(callback, self){
+	var demo = self.getDemo();
 	this.getCollection('twitter_users', function(error, coll){
 		if(error) callback (error);
 		else{
-			coll.find({},{id:1, _id:0}).toArray(function(error, results) {
+			coll.find({demo:demo,monitor:true},{id:1, _id:0}).toArray(function(error, results) {
 	            if( error ) callback(error)
 	            else{
 	          	   var ids = [];
@@ -405,7 +410,7 @@ TwitterProcessor.prototype.getUserIds = function(callback, self){
 						ids.push(results[item].id);
 				   }
 				   str = ids.join();
-	          	   callback(str, self);
+				   callback(str, self);
 	            }
 	        });			
 		}

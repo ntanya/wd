@@ -22,7 +22,7 @@ table#users
         td #{user.description}
         td #{user.location}
         td
-         - if (user.monitor=='true')
+         - if (user.monitor===true)
              input(type="checkbox",class="monitor",id=user.screen_name,checked)
          - else
              input(type="checkbox",class="monitor",id=user.screen_name) 
