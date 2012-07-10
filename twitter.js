@@ -5,7 +5,7 @@ var mongo   = require('mongodb');
 var database = null;
 
 //var mongostr = "mongodb://localhost/dataintel";
-var mongostr = "mongodb://tanya:tanya@ds033897.mongolab.com:33757/heroku_app5667663"
+var mongostr = "mongodb://tanya:tanya@ds033757.mongolab.com:33757/heroku_app5667663"
 
 /*---- string trim helper ----*/
 String.prototype.trim = function() {
