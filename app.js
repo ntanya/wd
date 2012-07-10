@@ -235,7 +235,7 @@ app.get('/auth/twitter/callback', function(req, res, next){
 
 
 /*--- cron --- */
-
+/*
 var cronJob = require('cron').CronJob;
 new cronJob('0 * * * * *', function(){
     console.log('------------------------- Cron called');
@@ -246,7 +246,7 @@ new cronJob('0 * * * * *', function(){
   	}
 	
 }, null, true);
-
+*/
 
 
 // Set dynamic helpers

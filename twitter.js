@@ -82,7 +82,7 @@ TwitterProcessor.prototype.dbIncTweets = function(field, demo){
 		else{
 			var t = new Date();
 			var today = (t.getMonth()+1) + '/' + t.getDate() + '/' + t.getFullYear();
-			coll.update({tag:field, tag_date:today, tag_demo:demo},{$inc: {count : 1}},{upsert:true});
+			coll.update({tag:field, tag_date:today, full_date:t, tag_demo:demo},{$inc: {count : 1}},{upsert:true});
 		}
 	});
 };
@@ -102,6 +102,19 @@ TwitterProcessor.prototype.getLastCursor = function(username,callback){
 	});
 };
 
+function Date_toYMD(d) {
+    var year, month, day;
+    year = String(d.getFullYear());
+    month = String(d.getMonth() + 1);
+    if (month.length == 1) {
+        month = "0" + month;
+    }
+    day = String(d.getDate());
+    if (day.length == 1) {
+        day = "0" + day;
+    }
+    return year + "-" + month + "-" + day;
+}
 
 /*------------- app interaction functions -----------------*/
 TwitterProcessor.prototype.getTrends = function(callback,sort,order){
@@ -110,35 +123,14 @@ TwitterProcessor.prototype.getTrends = function(callback,sort,order){
 		else{
 			var t = new Date();
 			t.setDate(t.getDate() - 5);  // get trends for only 4 days
+			
+			//console.log('dates earlier than: ' + Date_toYMD(t));
 
 			sortField = sort || '';
 			sortOrder = order || '-1';
 
-			/*
-			var sortObj = {};
-			
-			switch(sortField){
-				case 'tag': 
-					sortObj = {'tag':1,'tag_date':-1};
-					break;
-				case 'count':
-					sortObj = {tag_date:sortOrder,count:-1};
-					break;
-				default:
-					sortObj = {tag_date:-1,count:-1};
-			}
-			
-			print(JSON.stringify(sortObj));
-			
-			coll.find({count:{$gt:10},tag_date:{$gt:d4}},{_id:0}).sort({"tag_date":-1,"count":-1}).toArray(function(error,results){
-			    if(error) callback(error);
-					else callback(null,results);
-				});
-			
-			*/
-
 			if(sortField == 'tag'){
-				coll.find({count:{$gt:10},tag_date:{$gt:t}},{_id:0}).sort({tag:1,count:-1}).toArray(function(error,results){
+				coll.find({count:{$gt:10},tag_date:{$gte:Date_toYMD(t)}},{_id:0}).sort({tag:1,count:-1}).toArray(function(error,results){
 				//coll.group( { key:{tag:true, tag_date:true}, initial: {sum:0}, reduce: function(doc, prev) {prev.sum += doc.count} }).toArray(function(error, results){					
 				    if(error) callback(error);
 					else callback(null,results);
@@ -147,7 +139,7 @@ TwitterProcessor.prototype.getTrends = function(callback,sort,order){
 
 			}
 			else{
-				coll.find({count:{$gt:10},tag_date:{$gt:t}},{_id:0}).sort({tag_date:-1,count:-1}).toArray(function(error,results){
+				coll.find({count:{$gt:10},tag_date:{$gte:Date_toYMD(t)}},{_id:0,full_date:0}).sort({tag_date:-1,count:-1}).toArray(function(error,results){
 				//coll.group( { key:{tag:true, tag_date:true}, initial: {sum:0}, reduce: function(doc, prev) {prev.sum += doc.count} }).toArray(function(error, results){					
 				    if(error) callback(error);
 					else callback(null,results);

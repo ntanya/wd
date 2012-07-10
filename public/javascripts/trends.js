@@ -7,10 +7,20 @@ function ISODateString(d){
       + pad(d.getUTCMinutes())+':'
       + pad(d.getUTCSeconds())+'Z'}
       
-function shortTime(d){
- var d_d = new String(ISODateString(d));
- d_d = d_d.substring(0,d_d.indexOf('T'));
- return d_d;
+
+
+function Date_toYMD(d) {
+    var year, month, day;
+    year = String(d.getFullYear());
+    month = String(d.getMonth() + 1);
+    if (month.length == 1) {
+        month = "0" + month;
+    }
+    day = String(d.getDate());
+    if (day.length == 1) {
+        day = "0" + day;
+    }
+    return year + "-" + month + "-" + day;
 }
 
 
@@ -29,7 +39,7 @@ var d2 = x2;
 x3.setDate(x3.getDate() - 3);		
 var d3 = x3;
 x4.setDate(x4.getDate() - 4);		
-var d4 = x4;	
+var d4 = x4;
 
 
 // Transform data array into object with one tag per item
@@ -85,10 +95,10 @@ function processData(){
 		for(var i=0; i<currentData.length;i++){
 			
 			var thisTagDate = currentData[i].tag_date;
-			thisTagDate = thisTagDate.substring(0,thisTagDate.indexOf("T"));
+			//thisTagDate = thisTagDate.substring(0,thisTagDate.indexOf("T"));
 
 			
-			if(thisTagDate === shortTime(today))
+			if(thisTagDate === Date_toYMD(today))
 			{
 				today_ct = currentData[i].count;
 		
@@ -99,17 +109,17 @@ function processData(){
 			    }
 	   
 			}
-			if(thisTagDate === shortTime(d1)){
+			if(thisTagDate === Date_toYMD(d1)){
 				$('tr#'+item+' td.1d').html(currentData[i].count);
 				yest_ct = currentData[i].count;
 			}
-			if(thisTagDate === shortTime(d2)){
+			if(thisTagDate === Date_toYMD(d2)){
 				$('tr#'+item+' td.2d').html(currentData[i].count);
 			}
-			if(thisTagDate === shortTime(d3)){
+			if(thisTagDate === Date_toYMD(d3)){
 				$('tr#'+item+' td.3d').html(currentData[i].count);
 			}
-			if(thisTagDate === shortTime(d4)){
+			if(thisTagDate === Date_toYMD(d4)){
 				$('tr#'+item+' td.4d').html(currentData[i].count);
 			}			
 		}
