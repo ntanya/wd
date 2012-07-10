@@ -29,10 +29,12 @@ app.configure('development', function(){
 app.configure('production', function(){
   app.use(express.errorHandler());
   app.set('host', 'stormy-fire-6148.herokuapp.com');
-  app.set('mongostr','mongodb://tanya:tanya@ds033897.mongolab.com:33757/heroku_app5667663');
+  app.set('mongostr','mongodb://tanya:tanya@ds033757.mongolab.com:33757/heroku_app5667663');
 });
 
 var twitterProcessor = new TwitterProcessor();
+
+twitterProcessor.setDemo('teens');
 
 // Home page
 app.get('/', function(req, res){
