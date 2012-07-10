@@ -110,7 +110,6 @@ TwitterProcessor.prototype.getTrends = function(callback,sort,order){
 		else{
 			var t = new Date();
 			t.setDate(t.getDate() - 5);  // get trends for only 4 days
-			var d4 = (t.getMonth()+1) + '/' + t.getDate() + '/' + t.getFullYear();
 
 			sortField = sort || '';
 			sortOrder = order || '-1';
@@ -139,7 +138,7 @@ TwitterProcessor.prototype.getTrends = function(callback,sort,order){
 			*/
 
 			if(sortField == 'tag'){
-				coll.find({count:{$gt:10},tag_date:{$gt:d4}},{_id:0}).sort({tag:1,count:-1}).toArray(function(error,results){
+				coll.find({count:{$gt:10},tag_date:{$gt:t}},{_id:0}).sort({tag:1,count:-1}).toArray(function(error,results){
 				//coll.group( { key:{tag:true, tag_date:true}, initial: {sum:0}, reduce: function(doc, prev) {prev.sum += doc.count} }).toArray(function(error, results){					
 				    if(error) callback(error);
 					else callback(null,results);
@@ -148,7 +147,7 @@ TwitterProcessor.prototype.getTrends = function(callback,sort,order){
 
 			}
 			else{
-				coll.find({count:{$gt:10},tag_date:{$gt:d4}},{_id:0}).sort({tag_date:-1,count:-1}).toArray(function(error,results){
+				coll.find({count:{$gt:10},tag_date:{$gt:t}},{_id:0}).sort({tag_date:-1,count:-1}).toArray(function(error,results){
 				//coll.group( { key:{tag:true, tag_date:true}, initial: {sum:0}, reduce: function(doc, prev) {prev.sum += doc.count} }).toArray(function(error, results){					
 				    if(error) callback(error);
 					else callback(null,results);

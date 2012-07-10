@@ -1,15 +1,36 @@
+function ISODateString(d){
+ function pad(n){return n<10 ? '0'+n : n}
+ return d.getUTCFullYear()+'-'
+      + pad(d.getUTCMonth()+1)+'-'
+      + pad(d.getUTCDate())+'T'
+      + pad(d.getUTCHours())+':'
+      + pad(d.getUTCMinutes())+':'
+      + pad(d.getUTCSeconds())+'Z'}
+      
+function shortTime(d){
+ var d_d = new String(ISODateString(d));
+ d_d = d_d.substring(0,d_d.indexOf('T'));
+ return d_d;
+}
+
+
 // dates
 var t = new Date();
-var today = (t.getMonth()+1) + '/' + t.getDate() + '/' + t.getFullYear(); 
+var x1 = new Date();
+var x2 = new Date();
+var x3 = new Date();
+var x4 = new Date();
+var today = new Date();
 
-t.setDate(t.getDate() - 1);	
-var d1 = (t.getMonth()+1) + '/' + t.getDate() + '/' + t.getFullYear();
-t.setDate(t.getDate() - 1);
-var d2 = (t.getMonth()+1) + '/' + t.getDate() + '/' + t.getFullYear();
-t.setDate(t.getDate() - 1);
-var d3 = (t.getMonth()+1) + '/' + t.getDate() + '/' + t.getFullYear();
-t.setDate(t.getDate() - 1);
-var d4 = (t.getMonth()+1) + '/' + t.getDate() + '/' + t.getFullYear();
+x1.setDate(x1.getDate()-1);
+var d1 = x1;
+x2.setDate(x2.getDate() - 2);	
+var d2 = x2;
+x3.setDate(x3.getDate() - 3);		
+var d3 = x3;
+x4.setDate(x4.getDate() - 4);		
+var d4 = x4;	
+
 
 // Transform data array into object with one tag per item
 var newData = {};
@@ -59,9 +80,15 @@ function processData(){
 		
 		var today_ct = 0; 
 		var yest_ct = 0;	
+		
 			
 		for(var i=0; i<currentData.length;i++){
-			if(currentData[i].tag_date == today)
+			
+			var thisTagDate = currentData[i].tag_date;
+			thisTagDate = thisTagDate.substring(0,thisTagDate.indexOf("T"));
+
+			
+			if(thisTagDate === shortTime(today))
 			{
 				today_ct = currentData[i].count;
 		
@@ -72,17 +99,17 @@ function processData(){
 			    }
 	   
 			}
-			if(currentData[i].tag_date == d1){
+			if(thisTagDate === shortTime(d1)){
 				$('tr#'+item+' td.1d').html(currentData[i].count);
 				yest_ct = currentData[i].count;
 			}
-			if(currentData[i].tag_date == d2){
+			if(thisTagDate === shortTime(d2)){
 				$('tr#'+item+' td.2d').html(currentData[i].count);
 			}
-			if(currentData[i].tag_date == d3){
+			if(thisTagDate === shortTime(d3)){
 				$('tr#'+item+' td.3d').html(currentData[i].count);
 			}
-			if(currentData[i].tag_date == d4){
+			if(thisTagDate === shortTime(d4)){
 				$('tr#'+item+' td.4d').html(currentData[i].count);
 			}			
 		}
