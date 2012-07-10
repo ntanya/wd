@@ -29,7 +29,7 @@ app.configure('development', function(){
 app.configure('production', function(){
   app.use(express.errorHandler());
   app.set('host', 'stormy-fire-6148.herokuapp.com');
-  app.set('mongostr','mongodb://tanya:tanya@ds033897.mongolab.com:33897/heroku_app5667663');
+  app.set('mongostr','mongodb://tanya:tanya@ds033897.mongolab.com:33757/heroku_app5667663');
 });
 
 var twitterProcessor = new TwitterProcessor();
@@ -239,7 +239,7 @@ new cronJob('0 * * * * *', function(){
     console.log('processRunning: ' + twitterProcessor.processRunning + ', getDemo: ' + twitterProcessor.getDemo());
     if((twitterProcessor.processRunning===false && twitterProcessor.getDemo())){
     	console.log('------------------------- Cron executing...');
-  		//twitterProcessor.processTweets();
+  		twitterProcessor.processTweets();
   	}
 	
 }, null, true);
