@@ -1,4 +1,4 @@
-body {font: 11px "Lucida Grande", Helvetica, Arial, sans-serif;margin:20px;}
+body {font: 12px "Lucida Grande", Helvetica, Arial, sans-serif;margin:20px;}
 a {color: #00B7FF;}
 
 .classVisible{visibility:visible;}
@@ -17,7 +17,7 @@ div#addLead{padding:10px;border:1px solid #ccc;}
 
 td{padding:2px 5px;}
 tr.header td{font-weight:bold;background-color:#eee;padding:7px;}
-table#trends td{border:0;text-align:center;width:65px;}
+table#trends td{border:0;text-align:center;width:65px;padding:5px;}
 table#trends td.tag{text-align:left;}
 
 table#trends td.newTrend{font-weight:bold;background:transparent url('/images/fire.gif') 90% 50% no-repeat;}

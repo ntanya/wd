@@ -1,14 +1,38 @@
 var express = require('express');
 var connect = require('connect');
+var connect_mongodb = require('connect-mongodb');
+
 var TwitterProsessor = require('./twitter').TwitterProcessor;
 var UserProsessor = require('./user').UserProcessor;
 
 var app = module.exports = express.createServer();
+var MemStore = express.session.MemoryStore;
 
 app.configure(function(){
   app.use(express.cookieParser());
+  
+  
+  /*var mongodb_session_store_config = function() {
+		var obj = {
+			dbname: "datacoll",
+			host: "ds033757.mongolab.com",
+			port: 33757
+		};
+
+		if (mongodb_user) {
+			obj.username = "tanya";
+			obj.password = "tanya";
+		}
+
+		return {
+			store: connect_mongodb(obj)
+		};
+	};
+	
+	*/
+  
   app.use(express.static(__dirname + '/public'));
-  app.use(express.session({secret: 'secret_key'}));
+  app.use(express.session({secret: 'secret_key', store: MemStore({reapInterval: 60000 * 10})}));
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.set('view options', {layout: true});
@@ -59,7 +83,7 @@ app.get('/trends', function(req, res){
 	var sort = req.query.sort || 'count';
 	var order = req.query.order || '-1';
 	//req.session.demo = 'teens';    // remove from this call, set this session var on '/'
-	var demo = req.session.demo || 'teens';
+	var demo = req.session.demo;
 	
 	twitterProcessor.getTrends(demo, function(error, trendData){
 			res.render('trends.jade',{ locals: {
