@@ -111,7 +111,7 @@ app.get('/ajax/updateDemo/', function(req, res){
 	req.session.demo = val;
 	twitterProcessor.setDemo(val);
 	console.log('new demo set: ' + val);
-	res.send('ok');
+	//res.send('ok');
 });
 
 
