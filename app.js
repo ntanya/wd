@@ -6,7 +6,7 @@ var TwitterProsessor = require('./twitter').TwitterProcessor;
 var UserProsessor = require('./user').UserProcessor;
 
 var app = module.exports = express.createServer();
-var MemStore = express.session.MemoryStore;
+//var MemStore = express.session.MemoryStore;
 
 app.configure(function(){
   app.use(express.cookieParser());
@@ -16,13 +16,10 @@ app.configure(function(){
 		var obj = {
 			dbname: "datacoll",
 			host: "ds033757.mongolab.com",
-			port: 33757
+			port: 33757,
+			obj.username = "tanya",
+			obj.password = "tanya"
 		};
-
-		if (mongodb_user) {
-			obj.username = "tanya";
-			obj.password = "tanya";
-		}
 
 		return {
 			store: connect_mongodb(obj)
