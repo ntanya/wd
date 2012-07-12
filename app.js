@@ -1,6 +1,6 @@
 var express = require('express');
 var connect = require('connect');
-//var connect_mongodb = require('connect-mongodb');
+var connect_mongodb = require('connect-mongodb');
 
 var TwitterProsessor = require('./twitter').TwitterProcessor;
 var UserProsessor = require('./user').UserProcessor;
@@ -12,7 +12,7 @@ app.configure(function(){
   app.use(express.cookieParser());
   
   
-  /*var mongodb_session_store_config = function() {
+  var mongodb_session_store_config = function() {
 		var obj = {
 			dbname: "datacoll",
 			host: "ds033757.mongolab.com",
@@ -29,10 +29,11 @@ app.configure(function(){
 		};
 	};
 	
-	*/
+	
   
   app.use(express.static(__dirname + '/public'));
-  app.use(express.session({secret: 'secret_key', store: MemStore({reapInterval: 60000 * 10})}));
+  //app.use(express.session({secret: 'secret_key', store: MemStore({reapInterval: 60000 * 10})}));
+  app.use(express.session(mongodb_session_store_config()));
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.set('view options', {layout: true});
