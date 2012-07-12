@@ -33,11 +33,10 @@ $(document).ready(function(){
 			type:"GET",
 			data:{'value':newDemo},
 			success: function(data){//alert('New demo group set');
-				//location.reload();
+				location.reload();
 			}
 		});
 		
-		location.reload();
 	});
 	
 	$('a#clickAddLead').click(function(){
