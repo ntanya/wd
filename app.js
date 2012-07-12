@@ -30,7 +30,7 @@ app.configure(function(){
   
   app.use(express.static(__dirname + '/public'));
   //app.use(express.session({secret: 'secret_key', store: MemStore({reapInterval: 60000 * 10})}));
-  app.use(express.session(mongodb_session_store_config()));
+  app.use(express.session({secret: 'secret_key'}, {store:mongodb_session_store_config()}));
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.set('view options', {layout: true});
