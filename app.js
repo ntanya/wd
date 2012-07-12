@@ -17,8 +17,8 @@ app.configure(function(){
 			dbname: "datacoll",
 			host: "ds033757.mongolab.com",
 			port: 33757,
-			obj.username = "tanya",
-			obj.password = "tanya"
+			username: "tanya",
+			password: "tanya"
 		};
 
 		return {
