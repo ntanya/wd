@@ -7,6 +7,7 @@ var app = module.exports = express.createServer();
 
 app.configure(function(){
   app.use(express.cookieParser());
+  app.use(express.static(__dirname + '/public'));
   app.use(express.session({secret: 'secret_key'}));
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
@@ -15,7 +16,6 @@ app.configure(function(){
   app.use(express.methodOverride());
   //app.use(require('stylus').middleware({ src: __dirname + '/public' }));
   app.use(app.router);
-  app.use(express.static(__dirname + '/public'));
   app.set('port',process.env.PORT || 3000);
 });
 
@@ -109,6 +109,7 @@ app.get('/users/ajax/updateMonitor/', function(req, res){
 app.get('/ajax/updateDemo/', function(req, res){
 	var val = req.query.value;
 	req.session.demo = val;
+	req.session.save();
 	twitterProcessor.setDemo(val, function(){
 		console.log('new demo set: ' + val);
 	    res.send('ok');
