@@ -1,15 +1,29 @@
+function Date_toYMD(d) {
+    var year, month, day;
+    year = String(d.getFullYear());
+    month = String(d.getMonth() + 1);
+    if (month.length == 1) {
+        month = "0" + month;
+    }
+    day = String(d.getDate());
+    if (day.length == 1) {
+        day = "0" + day;
+    }
+    return year + "-" + month + "-" + day;
+}
+
 // dates
 var t = new Date();
-var today = (t.getMonth()+1) + '/' + t.getDate() + '/' + t.getFullYear(); 
+var today = Date_toYMD(t);
 
 t.setDate(t.getDate() - 1);	
-var d1 = (t.getMonth()+1) + '/' + t.getDate() + '/' + t.getFullYear();
+var d1 = Date_toYMD(t);
 t.setDate(t.getDate() - 1);
-var d2 = (t.getMonth()+1) + '/' + t.getDate() + '/' + t.getFullYear();
+var d2 = Date_toYMD(t);
 t.setDate(t.getDate() - 1);
-var d3 = (t.getMonth()+1) + '/' + t.getDate() + '/' + t.getFullYear();
+var d3 = Date_toYMD(t);
 t.setDate(t.getDate() - 1);
-var d4 = (t.getMonth()+1) + '/' + t.getDate() + '/' + t.getFullYear();
+var d4 = Date_toYMD(t);
 
 // Transform data array into object with one tag per item
 var newData = {};
@@ -83,14 +97,14 @@ function makeChart(){
 		data.push({data:d,label:word});
 
 	}
-	//alert(JSON.stringify(data));
+	alert(JSON.stringify(data));
 
 	
 	var xticks = [[0, 'today'],[1, '1 day ago'], [2, '2 days ago'], [3, '3 days ago'],[4, '4 days ago']];
 
     $.plot($("#chartholder"), data,{
     
-    yaxis: { min: 0, max: 2000 },
+    yaxis: { min: 0, max: 300 },
     xaxis:{min:0, max:4, tickSize:1, ticks:xticks}
     });
 }

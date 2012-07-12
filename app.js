@@ -61,9 +61,10 @@ app.get('/tweets', function(req, res){
 app.get('/trends', function(req, res){
 	var sort = req.query.sort || 'count';
 	var order = req.query.order || '-1';
-	req.session.demo = 'teens';    // remove from this call, set this session var on '/'
+	//req.session.demo = 'teens';    // remove from this call, set this session var on '/'
+	var demo = req.session.demo;
 	
-	twitterProcessor.getTrends( function(error, trendData){
+	twitterProcessor.getTrends(demo, function(error, trendData){
 			res.render('trends.jade',{ locals: {
    				   trends:trendData,
    				   currentURL:'/trends/' 

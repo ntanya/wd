@@ -117,20 +117,20 @@ function Date_toYMD(d) {
 }
 
 /*------------- app interaction functions -----------------*/
-TwitterProcessor.prototype.getTrends = function(callback,sort,order){
+TwitterProcessor.prototype.getTrends = function(demo,callback,sort,order){
 	this.getCollection('tweets1', function(error, coll){
 		if(error) callback (error);
 		else{
 			var t = new Date();
-			t.setDate(t.getDate() - 5);  // get trends for only 4 days
+			t.setDate(t.getDate() - 4);  // get trends for only 4 days
 			
-			//console.log('dates earlier than: ' + Date_toYMD(t));
+			console.log('demo: ' + demo);
 
 			sortField = sort || '';
 			sortOrder = order || '-1';
 
 			if(sortField == 'tag'){
-				coll.find({count:{$gt:10},tag_date:{$gte:Date_toYMD(t)}},{_id:0}).sort({tag:1,count:-1}).toArray(function(error,results){
+				coll.find({tag_demo:demo,count:{$gt:10},tag_date:{$gte:Date_toYMD(t)}},{_id:0}).sort({tag:1,count:-1}).toArray(function(error,results){
 				//coll.group( { key:{tag:true, tag_date:true}, initial: {sum:0}, reduce: function(doc, prev) {prev.sum += doc.count} }).toArray(function(error, results){					
 				    if(error) callback(error);
 					else callback(null,results);
@@ -139,7 +139,7 @@ TwitterProcessor.prototype.getTrends = function(callback,sort,order){
 
 			}
 			else{
-				coll.find({count:{$gt:10},tag_date:{$gte:Date_toYMD(t)}},{_id:0,full_date:0}).sort({tag_date:-1,count:-1}).toArray(function(error,results){
+				coll.find({tag_demo:demo,count:{$gt:10},tag_date:{$gte:Date_toYMD(t)}},{_id:0,full_date:0}).sort({tag_date:-1,count:-1}).toArray(function(error,results){
 				//coll.group( { key:{tag:true, tag_date:true}, initial: {sum:0}, reduce: function(doc, prev) {prev.sum += doc.count} }).toArray(function(error, results){					
 				    if(error) callback(error);
 					else callback(null,results);
@@ -252,21 +252,24 @@ TwitterProcessor.prototype.saveLead = function(error,dataObj,arr){
 		// Only save people with more than 10000 followers
 		if(dataObj["followers_count"] > 10000){
 			TwitterProcessor.prototype.dbSave('leads', saveObj,callback);
-			TwitterProcessor.prototype.processFollowers(dataObj['screen_name']);
+			TwitterProcessor.prototype.processFollowers(dataObj['screen_name'],-1, demo);
 	    }
     }
 };
 
-TwitterProcessor.prototype.saveFollowers = function(error,dataObj,username){
+TwitterProcessor.prototype.saveFollowers = function(error,dataObj,param){
+
 	if(error){}
 	else{
+		var username = param[0];
+		var demo = param[1];
 		for(user in dataObj){
 			
 			if(dataObj[user]['followers_count'] > 10000){
 				
 				var saveObj = {
 					id: dataObj[user]["id"],
-					demo:'teens',
+					demo:demo,
 					screen_name: dataObj[user]["screen_name"],
 					created_at: dataObj[user]["created_at"],
 					description: dataObj[user]["description"],
@@ -283,10 +286,11 @@ TwitterProcessor.prototype.saveFollowers = function(error,dataObj,username){
 					url:dataObj[user]["url"],
 					utc_offset: dataObj[user]["utc_offset"],
 					listed_count: dataObj[user]["listed_count"],
-					geo_enabled: dataObj[user]["geo_enabled"]
+					geo_enabled: dataObj[user]["geo_enabled"],
+					monitor:true
 				};
 	
-			
+			    //print('saving users for demo: ' + demo);
 				TwitterProcessor.prototype.dbSave('twitter_users', saveObj);
 			}
 		}
@@ -328,7 +332,7 @@ httpGet = function(url, callback, param){
 	});	
 };
 
-TwitterProcessor.prototype.processFollowers = function(username, cursor){
+TwitterProcessor.prototype.processFollowers = function(username, cursor, demo){
 	var cursor = cursor || -1;
 	
 	// If we already processed some of the followers, check the log table and start from last cursor
@@ -336,7 +340,7 @@ TwitterProcessor.prototype.processFollowers = function(username, cursor){
 		TwitterProcessor.prototype.getLastCursor(username, function(results){
 			//print (results);
 			cursor = results[0].currCursor;
-			httpGet('/1/followers/ids.json?cursor='+cursor+'&screen_name=' + username, TwitterProcessor.prototype.getFollowerData, username);
+			httpGet('/1/followers/ids.json?cursor='+cursor+'&screen_name=' + username, TwitterProcessor.prototype.getFollowerData, [username,demo]);
 			
 			var data = {
 				timestamp: Date(),
@@ -348,7 +352,7 @@ TwitterProcessor.prototype.processFollowers = function(username, cursor){
 	}
 	else
 	{
-		httpGet('/1/followers/ids.json?cursor='+cursor+'&screen_name=' + username, this.getFollowerData, username);
+		httpGet('/1/followers/ids.json?cursor='+cursor+'&screen_name=' + username, this.getFollowerData, [username,demo]);
 		
 		var data = {
 			timestamp: Date(),
@@ -360,22 +364,24 @@ TwitterProcessor.prototype.processFollowers = function(username, cursor){
 };
 
 
-TwitterProcessor.prototype.getFollowerData = function(error, dataObj, username){
+TwitterProcessor.prototype.getFollowerData = function(error, dataObj, param){
 	if(error){}
 	
 	else{
 		var	ids = dataObj["ids"];	
 		var l = ids.length;
+		var username = param[0];
+		var demo = param[1];
 		
 		var cursor = dataObj["next_cursor"];
 		if(cursor){
-			TwitterProcessor.prototype.processFollowers(username, cursor);
+			TwitterProcessor.prototype.processFollowers(username, cursor, demo);
 		}
 		
 		for(var i=0; i<l;i=i+100)
 		{
 			var current = ids.splice(0, 100);  // Getting user data for 100 IDs, since up to 10o IDs are allowed per request
-			setTimeout(httpGet('/1/users/lookup.json?user_id='+current.toString()+'&include_entities=false',TwitterProcessor.prototype.saveFollowers,username),3000);	
+			setTimeout(httpGet('/1/users/lookup.json?user_id='+current.toString()+'&include_entities=false',TwitterProcessor.prototype.saveFollowers,param),3000);	
 		}
 	}
 
