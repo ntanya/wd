@@ -46,8 +46,9 @@ TwitterProcessor = function(){
 	this.processRunning = false;
 }
 
-TwitterProcessor.prototype.setDemo = function(demo){
+TwitterProcessor.prototype.setDemo = function(demo, callback){
 	this.demo = demo;
+	if(typeof(callback) === 'function')callback(null);
 }
 
 TwitterProcessor.prototype.getDemo = function(){

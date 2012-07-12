@@ -109,9 +109,10 @@ app.get('/users/ajax/updateMonitor/', function(req, res){
 app.get('/ajax/updateDemo/', function(req, res){
 	var val = req.query.value;
 	req.session.demo = val;
-	twitterProcessor.setDemo(val);
-	console.log('new demo set: ' + val);
-	res.send('ok');
+	twitterProcessor.setDemo(val, function(){
+		console.log('new demo set: ' + val);
+	    res.send('ok');
+	});
 });
 
 
