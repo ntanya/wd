@@ -33,21 +33,16 @@ app.configure('production', function(){
 });
 
 var twitterProcessor = new TwitterProcessor();
-
-twitterProcessor.setDemo('teens');
+twitterProcessor.setDemo('teens'); // set initial demo
 
 // Home page
 app.get('/', function(req, res){
-	req.session.demo = 'teens';
-	twitterProcessor.setDemo('teens');
-	res.redirect('/trends');
 	
 });
 
 // Process tweets
 app.get('/tweets', function(req, res){
 	
-	twitterProcessor.setDemo('teens');
 	
   	res.render('tweets.jade',{ locals: {
    		  currentURL:'/tweets/',
@@ -61,6 +56,9 @@ app.get('/tweets', function(req, res){
 app.get('/trends', function(req, res){
 	var sort = req.query.sort || 'count';
 	var order = req.query.order || '-1';
+	
+	req.session.demo = req.session.demo || 'teens';
+	
 	//req.session.demo = 'teens';    // remove from this call, set this session var on '/'
 	var demo = req.session.demo;
 	
@@ -109,7 +107,7 @@ app.get('/users/ajax/updateMonitor/', function(req, res){
 app.get('/ajax/updateDemo/', function(req, res){
 	var val = req.query.value;
 	req.session.demo = val;
-	req.session.save();
+
 	twitterProcessor.setDemo(val, function(){
 		console.log('new demo set: ' + val);
 	    res.send('ok');
