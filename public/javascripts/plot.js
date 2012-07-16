@@ -103,11 +103,11 @@ function makeChart(){
 			}
 		}
 		
-		d.push([0,todayct]);
-		d.push([1, d1ct]);
+		d.push([0,d4ct]);
+		d.push([1, d3ct]);
 		d.push([2,d2ct]);
-		d.push([3,d3ct]);
-		d.push([4,d3ct]);
+		d.push([3,d1ct]);
+		d.push([4,todayct]);
 
 		
 		data.push({data:d,label:word});
@@ -120,14 +120,15 @@ function makeChart(){
 	
 	var maxValue = Math.max.apply(null,countArr);
 	
-	var xticks = [[0, 'today'],[1, '1 day ago'], [2, '2 days ago'], [3, '3 days ago'],[4, '4 days ago']];
+	var xticks = [[0, '4 days ago'],[1, '3 days ago'], [2, '2 days ago'], [3, '1 day ago'],[4, 'today']];
 
     $.plot($("#chartholder"), data,{
     
     yaxis: { min: 0, max: maxValue},
     xaxis:{min:0, max:4, tickSize:100, ticks:xticks},
     series:{points:{show:true}, lines:{show:true, fill:true}},
-    grid: { hoverable: true }
+    grid: { hoverable: true },
+    legend: {position:'nw'}
     });
 }
 
