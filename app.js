@@ -87,17 +87,22 @@ app.get('/trends', function(req, res){
 	var sort = req.query.sort || 'count';
 	var order = req.query.order || '-1';
 	//req.session.demo = 'teens';    // remove from this call, set this session var on '/'
+	
 	var demo = req.session.demo;
-	
-	twitterProcessor.getTrends(demo, function(error, trendData){
-			res.render('trends.jade',{ locals: {
-   				   trends:trendData,
-   				   currentURL:'/trends/' 
-    			}
-       		});		
-		}
-	
-	,sort,order);
+	if(!demo){
+		res.redirect('/');
+	}
+	else{
+		twitterProcessor.getTrends(demo, function(error, trendData){
+				res.render('trends.jade',{ locals: {
+						   trends:trendData,
+						   currentURL:'/trends/' 
+					}
+		   		});		
+			}
+		
+		,sort,order);
+	}
 	
 });
 // Trends chart
@@ -105,15 +110,21 @@ app.get('/trends/chart', function(req, res){
 	var sort = req.query.sort || 'count';
 	var order = req.query.order || '-1';
 
-	twitterProcessor.getTrends( function(error, trendData){
-			res.render('trends_chart.jade',{ locals: {
-   				   trends:trendData,
-   				   currentURL:'/trends/' 
-    			}
-       		});		
-		}
-	
-	,sort,order);
+	var demo = req.session.demo;
+	if(!demo){
+		res.redirect('/');
+	}
+	else{
+		twitterProcessor.getTrends(demo, function(error, trendData){
+				res.render('trends_chart.jade',{ locals: {
+						   trends:trendData,
+						   currentURL:'/trends/' 
+					}
+		   		});		
+			}
+		
+		,sort,order);
+	}
 });
 
 
@@ -134,7 +145,6 @@ app.get('/users/ajax/updateMonitor/', function(req, res){
 app.get('/ajax/updateDemo/', function(req, res){
 	var val = req.query.value;
 	req.session.demo = val;
-	req.session.save();
 	twitterProcessor.setDemo(val, function(){
 		console.log('new demo set: ' + val);
 	    res.send('ok');
