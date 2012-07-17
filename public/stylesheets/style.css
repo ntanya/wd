@@ -21,8 +21,8 @@ table#trends td{border:0;text-align:center;width:65px;padding:5px;}
 table#trends td.tag{text-align:left;}
 
 table#trends td.newTrend{font-weight:bold;background:transparent url('/images/fire.gif') 90% 50% no-repeat;}
-table#trends td.lowerTrend{ background:transparent url('/images/up_arr.gif') 90% 50% no-repeat;}
-table#trends td.higherTrend{ background:transparent url('/images/down_arr.gif') 90% 50% no-repeat;}
+table#trends td.lowerTrend{ background:transparent url('/images/down_arr.gif') 90% 50% no-repeat;}
+table#trends td.higherTrend{ background:transparent url('/images/up_arr.gif') 90% 50% no-repeat;}
 
 tr:nth-child(even) {
   background-color: #fff;
