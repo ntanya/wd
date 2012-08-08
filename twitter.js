@@ -426,7 +426,7 @@ TwitterProcessor.prototype.saveTweets = function(tweet, demo){
 	    {
 	    	var tag = matchedTags[i].toLowerCase().trim();
 	    	
-	    	if(tag.length>5 && tag.length < 50){
+	    	if(tag.length>2 && tag.length < 50){
 	    		console.log('found tag: ' + tag);
 				this.dbIncTweets(tag, demo);        	
 	       	}
