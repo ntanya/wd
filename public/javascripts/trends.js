@@ -47,6 +47,9 @@ var newData = {};
 
 for(var x=0;x<data.length;++x) {
 	var currentWord = data[x].tag;
+	
+	currentWord = currentWord.substr(1,currentWord.length-1);
+	
 	var currentDate = data[x].tag_date;
 	var currentCount = data[x].count;
 	var wordExists = false;
