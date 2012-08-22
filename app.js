@@ -6,7 +6,11 @@ var connect_mongodb = require('connect-mongodb');
 var TwitterProsessor = require('./twitter').TwitterProcessor;
 var UserProsessor = require('./user').UserProcessor;
 
-var app = module.exports = express.createServer();
+function authorize(username, password) {
+    return '360i' === username & '360i' === password;
+}
+
+var app = module.exports = express.createServer(express.basicAuth(authorize));
 //var MemStore = express.session.MemoryStore;
 
 app.configure(function(){
