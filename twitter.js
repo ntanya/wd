@@ -158,8 +158,8 @@ TwitterProcessor.prototype.getLinks = function(demo,callback,sort,order){
                        var t = new Date();
                        t.setDate(t.getDate() - 4);  // get trends for only 4 days
 
-                       //coll.find({demo:demo,count:{$gt:10},date:{$gte:Date_toYMD(t)}},{_id:0}).sort({link:1,count:-1}).toArray(function(error,results){
-                       coll.find().toArray(function(error,results){                            
+                       coll.find({demo:demo,count:{$gt:10},date:{$gte:Date_toYMD(t)}},{_id:0}).sort({link:1,count:-1}).toArray(function(error,results){
+                       //coll.find().toArray(function(error,results){                            
                            if(error) callback(error);
                                else callback(null,results);
                        });
