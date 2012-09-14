@@ -27,6 +27,11 @@ html(lang="en")
               a(href='/trends/').current Trends
             else
               a(href='/trends/') Trends
+          li 
+            if(currentURL == '/links/')
+              a(href='/links/').current Links
+            else
+              a(href='/links/') Links
           li
             if(currentURL == '/users/')
               a(href='/users/').current Users

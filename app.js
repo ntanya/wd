@@ -131,6 +131,30 @@ app.get('/trends/chart', function(req, res){
 	}
 });
 
+app.get('/links', function(req, res){
+       var sort = req.query.sort || 'count';
+       var order = req.query.order || '-1';
+       //req.session.demo = 'teens';    // remove from this call, set this session var on '/'
+       
+       var demo = req.session.demo;
+       if(!demo){
+               res.redirect('/');
+       }
+       else{
+               twitterProcessor.getLinks(demo, function(error, linkData){
+                               res.render('links.jade',{ locals: {
+                                                  links:linkData,
+                                                  currentURL:'/links/' 
+                                       }
+                               });             
+                               //console.log(JSON.stringify(linkData));
+                       }
+               
+               ,sort,order);
+       }
+       
+});
+
 
 // AJAX functions
 app.get('/users/ajax/updateMonitor/', function(req, res){
