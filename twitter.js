@@ -151,6 +151,29 @@ TwitterProcessor.prototype.getTrends = function(demo,callback,sort,order){
 	});
 };
 
+
+TwitterProcessor.prototype.getTrends_hours = function(demo,callback,sort,order){
+	this.getCollection('tweets_hours', function(error, coll){
+		if(error) callback (error);
+		else{
+			var t = new Date();
+			t.setDate(t.getDate() - 2);  
+			
+			console.log('inside trend hours, demo: ' + demo);
+
+			sortField = sort || '';
+			sortOrder = order || '-1';
+
+			coll.find({tag_demo:demo,count:{$gt:50},tag_date:{$gte:Date_toYMD(t)}},{_id:0}).sort({tag_date:-1,tag_hours:1,count:-1}).limit(200).toArray(function(error,results){
+				    if(error) callback(error);
+					else callback(null,results);
+				});
+		}
+	});
+};
+
+
+
 TwitterProcessor.prototype.getLinks = function(demo,callback,sort,order){
        this.getCollection('links', function(error, coll){
                if(error) callback (error);
@@ -158,7 +181,7 @@ TwitterProcessor.prototype.getLinks = function(demo,callback,sort,order){
                        var t = new Date();
                        t.setDate(t.getDate() - 4);  // get trends for only 4 days
 
-                       coll.find({demo:demo,count:{$gt:10},date:{$gte:Date_toYMD(t)}},{_id:0}).sort({link:1,count:-1}).toArray(function(error,results){
+                       coll.find({demo:demo,count:{$gt:10},date:{$gte:Date_toYMD(t)}},{_id:0}).sort({date:-1,count:-1}).toArray(function(error,results){
                        //coll.find().toArray(function(error,results){                            
                            if(error) callback(error);
                                else callback(null,results);
@@ -203,17 +226,32 @@ TwitterProcessor.prototype.getTrends_mr = function(callback){
 };
 
 
-TwitterProcessor.prototype.getUsers = function(demo,callback){
+TwitterProcessor.prototype.getUsers = function(demo, monitor, callback){
 	this.getCollection('twitter_users', function(error, coll){
 		if(error) callback (error);
 		else{
-			coll.find({demo:demo}, {_id:0}).sort({followers_count:-1}).toArray(function(error,results){
+			
+			if(monitor === 'all'){
+				
+				coll.find({demo:demo}, {_id:0}).sort({followers_count:-1}).toArray(function(error,results){
 				if(error) callback(error);
 				else{
 					//print(results);
 					callback(null,results);
 				}
-			});
+				});
+			}
+			else{
+				var mon = (monitor==='listen'?true:false);
+	
+				coll.find({demo:demo, monitor:mon}, {_id:0}).sort({followers_count:-1}).toArray(function(error,results){
+					if(error) callback(error);
+					else{
+						//print(results);
+						callback(null,results);
+					}
+				});
+			}
 		}
 	});
 };

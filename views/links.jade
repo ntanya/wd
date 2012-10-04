@@ -8,6 +8,7 @@ table#trends
   tr.header
      td 
        a(href='/trends?sort=tag') Link
+     td inst
      td 
        a(href='/trends?sort=tag_date') Today
      td 1 day ago
@@ -21,6 +22,7 @@ table#trends
      td(class="tag")
        
        a(href="#{item.link}", target="_blank") #{item.link}
+     td.inst
      td.today
      td.1d
      td.2d

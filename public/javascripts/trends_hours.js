@@ -27,36 +27,33 @@ function Date_toYMD(d) {
 // dates
 var t = new Date();
 var x1 = new Date();
-var x2 = new Date();
-var x3 = new Date();
-var x4 = new Date();
+
 var today = new Date();
 
 x1.setDate(x1.getDate()-1);
 var d1 = x1;
-x2.setDate(x2.getDate() - 2);	
-var d2 = x2;
-x3.setDate(x3.getDate() - 3);		
-var d3 = x3;
-x4.setDate(x4.getDate() - 4);		
-var d4 = x4;
+
+//x2.setDate(x2.getDate() - 2);	
+//var d2 = x2;
+
 
 
 // Transform data array into object with one tag per item
 var newData = {};
 
 for(var x=0;x<data.length;++x) {
-	var currentWord = data[x].link;
-	currentWord = currentWord.replace('http://t.co/','');
+	var currentWord = data[x].tag;
 	
-	var currentDate = data[x].date;
+	currentWord = currentWord.substr(1,currentWord.length-1);
+	
+	var currentDate = data[x].tag_date;
+	var currentDaypart = data[x].tag_hours;
 	var currentCount = data[x].count;
-	var inst = data[x].is_instagram;
 	var wordExists = false;
 	
 	for(var thisWord in newData) {
 		if(thisWord === currentWord) {
-			newData[thisWord].data.push({tag_date:currentDate, count:currentCount, is_instagram: inst});
+			newData[thisWord].data.push({tag_date:currentDate, count:currentCount, daypart:currentDaypart});
 			wordExists = true;
 		}
 	}
@@ -66,7 +63,7 @@ for(var x=0;x<data.length;++x) {
 			data: [
 				{tag_date:currentDate,
 				count:currentCount,
-				is_instagram: inst}
+				daypart:currentDaypart}
 			]	
 		};
 	}
@@ -90,7 +87,7 @@ function processData(){
 	for(item in newData)
 	{
 		var currentData = newData[item].data;
-		//alert('item: ' + item + ', currentData: ' + JSON.stringify(currentData));
+		//alert('currentData: ' + JSON.stringify(currentData));
 		
 		var today_ct = 0; 
 		var yest_ct = 0;	
@@ -99,47 +96,48 @@ function processData(){
 		for(var i=0; i<currentData.length;i++){
 			
 			var thisTagDate = currentData[i].tag_date;
+			var thisTagDaypart = currentData[i].daypart;
 			//thisTagDate = thisTagDate.substring(0,thisTagDate.indexOf("T"));
 
-			
+						
 			if(thisTagDate === Date_toYMD(today))
 			{
-				today_ct = currentData[i].count;
-		
-			    $('tr#'+item+' td.today').html(today_ct);
-			    if(currentData.length == 1)
-			    {
-			    	$('tr#'+item+' td.today').addClass('newTrend');
-			    }
+				if(thisTagDaypart === 'am'){
+					today_ct = currentData[i].count;
+					$('tr#'+item+' td.0d_a').html(today_ct);
+				    
+				}
+				else
+				{
+					$('tr#'+item+' td.0d_p').html(currentData[i].count);
+					if(currentData.length == 1)
+				    {
+				    	$('tr#'+item+' td.0d_p').addClass('newTrend');
+				    }
+					yest_ct = currentData[i].count;
+				}
 	   
 			}
 			if(thisTagDate === Date_toYMD(d1)){
-				$('tr#'+item+' td.1d').html(currentData[i].count);
-				yest_ct = currentData[i].count;
+				
+				if(thisTagDaypart === 'am'){
+					
+					$('tr#'+item+' td.1d_a').html(currentData[i].count);
+				
+				}
+				else{
+					$('tr#'+item+' td.1d_p').html(currentData[i].count);
+				}
+				
 			}
-			if(thisTagDate === Date_toYMD(d2)){
-				$('tr#'+item+' td.2d').html(currentData[i].count);
-			}
-			if(thisTagDate === Date_toYMD(d3)){
-				$('tr#'+item+' td.3d').html(currentData[i].count);
-			}
-			if(thisTagDate === Date_toYMD(d4)){
-				$('tr#'+item+' td.4d').html(currentData[i].count);
-			}			
+			
 		}
 		
 		if(today_ct > 0 && today_ct < yest_ct){
-			$('tr#'+item+' td.today').addClass('lowerTrend');
+			$('tr#'+item+' td.0d_p').addClass('higherTrend');
 		}
 		if(today_ct > 0 && yest_ct > 0 && today_ct > yest_ct){
-			$('tr#'+item+' td.today').addClass('higherTrend');
-		}
-		
-		// create instagram icon
-		
-		if(currentData.is_instagram !== undefined)
-		{
-			$('tr#'+currentData.is_instagram+' td.inst').html('yes');
+			$('tr#'+item+' td.0d_p').addClass('lowerTrend');
 		}
 	}
 }

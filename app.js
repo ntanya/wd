@@ -109,6 +109,32 @@ app.get('/trends', function(req, res){
 	}
 	
 });
+
+
+app.get('/trends_hours', function(req, res){
+	var sort = req.query.sort || 'count';
+	var order = req.query.order || '-1';
+	//req.session.demo = 'teens';    // remove from this call, set this session var on '/'
+	
+	var demo = req.session.demo;
+	if(!demo){
+		res.redirect('/');
+	}
+	else{
+		twitterProcessor.getTrends_hours(demo, function(error, trendData){
+				res.render('trends_hours.jade',{ locals: {
+						   trends:trendData,
+						   currentURL:'/trends_hours/' 
+					}
+		   		});		
+			}
+		
+		,sort,order);
+	}
+	
+});
+
+
 // Trends chart
 app.get('/trends/chart', function(req, res){
 	var sort = req.query.sort || 'count';
@@ -184,8 +210,14 @@ app.get('/ajax/updateDemo/', function(req, res){
 
 // Users page
 app.get('/users', function(req, res){
+	var show = req.query.show || 'all';
+	
 	var demo = req.session.demo;
-	twitterProcessor.getUsers(demo, function(error, userData){
+	if(!demo){
+               res.redirect('/');
+       }
+	else{
+		twitterProcessor.getUsers(demo, show, function(error, userData){
 			res.render('users.jade',{ locals: {
 				   userCount: userData.length,
    				   users:userData,
@@ -193,7 +225,10 @@ app.get('/users', function(req, res){
     			}
        		});		
 		}
-	);
+	    );
+	
+	}
+	
 });
 
 

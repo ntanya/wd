@@ -1,0 +1,10 @@
+script(type='text/javascript')
+    var data =!{JSON.stringify(tweets)}
+script(src='/javascripts/tweets.js')
+    
+
+h1 Tweets
+
+each item in tweets
+   div
+     p item.text
