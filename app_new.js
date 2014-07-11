@@ -16,7 +16,7 @@ app.use(express.cookieParser());
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(app.router);
-  app.set('port',process.env.PORT || 3000);
+  //app.set('port',process.env.PORT || 3000);
 });
 
 
@@ -24,13 +24,15 @@ app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
   app.set('host','localhost');
   //app.set('mongostr','mongodb://localhost/wedding');
+  app.set('port', 3000);
   app.set('mongostr', 'mongodb://tanya:tanya@ds037637.mongolab.com:37637/wedding');
 });
 
 app.configure('production', function(){
   app.use(express.errorHandler());
-  app.set('host', 'stormy-fire-6148.herokuapp.com');
-  app.set('mongostr','mongodb://tanya:tanya@ds033757.mongolab.com:33757/heroku_app5667663');
+  app.set('host', 'wd.tanyanam.com');
+  app.set('port', 19215);
+  app.set('mongostr', 'mongodb://tanya:tanya@ds037637.mongolab.com:37637/wedding');
 });
 
 
