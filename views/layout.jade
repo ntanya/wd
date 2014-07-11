@@ -1,7 +1,7 @@
 !!! 5
 html(lang="en")
   head
-    title Super App
+    title W
     script(src='http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js')
     script(src='/javascripts/script.js')
     link(rel='stylesheet', href='/stylesheets/style.css')
@@ -10,37 +10,27 @@ html(lang="en")
       div#register
         div#body!=body
     - else
-    
-      div#demo Working with demo: 
-        span#currentDemo #{session.demo} 
-        a#changedemo(href='#', style='margin-left:10px;') change
-        div#demobox(class='classHidden') Change demo: 
-          select#newDemo
-            option(value='teens') teens
-            option(value='moms') moms
-            option(value='fashion') fashion
-          input#doChangeDemo(type='button', value='OK')
       div#nav
         ul
           li 
-            if(currentURL == '/trends/')
-              a(href='/trends/').current Trends
+            if(currentURL == '/vendors/')
+              a(href='/vendors/').current Vendors
             else
-              a(href='/trends/') Trends
+              a(href='/vendors/') Vendors
+          li
+            if(currentURL == '/register/')
+              a(href='/register/').current Register
+            else
+              a(href='/register/') Register
           li 
-            if(currentURL == '/links/')
-              a(href='/links/').current Links
+            if(currentURL == '/blog/')
+              a(href='/blog/').current Blog
             else
-              a(href='/links/') Links
+              a(href='/blog/') Blog
           li
-            if(currentURL == '/users/')
-              a(href='/users/').current Users
+            if(currentURL == '/forum/')
+              a(href='/forum/').current Forum 
             else
-              a(href='/users/') Users
-          li
-            if(currentURL == '/seeds/')
-              a(href='/seeds/').current Influencers 
-            else
-              a(href='/seeds/') Influencers 
+              a(href='/forum/') Forum 
         div#container
          div#body!= body

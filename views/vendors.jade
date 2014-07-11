@@ -1,0 +1,18 @@
+
+h1 Vendors
+
+table#trends
+  tr.header
+     td 
+       a(href='/vendors?sort=alpha') Name
+     td 
+       a(href='/trends?sort=datecreated') Date created
+     td Description
+     td Category
+  each item in vendorData
+    tr(id=item.id)
+     td(class="tag")
+       a(href='/vendors/'+item.name)=item.name
+     td
+     td=item.description
+     td=item.category

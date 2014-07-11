@@ -1,124 +1,71 @@
 var express = require('express');
-var connect = require('connect');
-var TwitterProsessor = require('./twitter').TwitterProcessor;
+var mongoose = require('mongoose');
 
-var hashtags = [];
-var tagCounter = [];
 
-var app = module.exports = express.createServer();
+var app = module.exports = express.createServer();//(express.basicAuth(authorize));
+//var MemStore = express.session.MemoryStore;
 
 app.configure(function(){
-  app.use(express.cookieParser());
-  app.use(express.session({secret: 'secret_key'}));
+app.use(express.cookieParser());
+	
+
+  app.use(express.static(__dirname + '/public'));
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.set('view options', {layout: true});
   app.use(express.bodyParser());
   app.use(express.methodOverride());
-  //app.use(require('stylus').middleware({ src: __dirname + '/public' }));
   app.use(app.router);
-  app.use(express.static(__dirname + '/public'));
+  app.set('port',process.env.PORT || 3000);
 });
+
 
 app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+  app.set('host','localhost');
+  //app.set('mongostr','mongodb://localhost/wedding');
+  app.set('mongostr', 'mongodb://tanya:tanya@ds037637.mongolab.com:37637/wedding');
 });
 
 app.configure('production', function(){
   app.use(express.errorHandler());
+  app.set('host', 'stormy-fire-6148.herokuapp.com');
+  app.set('mongostr','mongodb://tanya:tanya@ds033757.mongolab.com:33757/heroku_app5667663');
 });
 
-var twitterProcessor = new TwitterProcessor();
+
+
+/* ---------   ROUTES ---------*/
 
 // Home page
 app.get('/', function(req, res){
-	req.session.demo = 'teens';
-	res.redirect('/trends');
-});
-
-// Process tweets
-app.get('/tweets', function(req, res){
-	
-	var currDemo = req.session.demo;
-	if (req.url != '/favicon.ico') {
-	   twitterProcessor.processTweets();
-	}
-	
-  	res.send('getting tweets…'); 
-});
-
-// Trends page
-app.get('/trends', function(req, res){
-	var sort = req.query.sort || 'count';
-	var order = req.query.order || '-1';
-	req.session.demo = 'teens';    // remove from this call, set this session var on '/'
-	
-	twitterProcessor.getTrends( function(error, trendData){
-			res.render('trends.jade',{ locals: {
-   				   trends:trendData,
-   				   currentURL:'/trends/' 
-    			}
-       		});		
-		}
-	
-	,sort,order);
-	
-});
-
-// AJAX request to set "monitor" bit in users collection
-app.get('/users/updateMonitor/', function(req, res){
-	var user = req.query.username;
-	var val = req.query.value;
-	
-	twitterProcessor.updateUserMonitorStatus(user,val, function(error, status){
-	}
-	
-	);
-});
-
-// Users page
-app.get('/users', function(req, res){
-	twitterProcessor.getUsers( function(error, userData){
-			res.render('users.jade',{ locals: {
-   				   users:userData,
-   				   currentURL:'/users/' 
-    			}
-       		});		
-		}
-	);
-});
-
-
-// Seeds page
-app.get('/seeds', function(req, res){
-	twitterProcessor.getLeads( function(error, userData){
-			res.render('leads.jade',{ locals: {
-   				   users:userData,
-   				   currentURL:'/seeds/' 
-    			}
-       		});		
-		}
-	);
-});
-
-// Add seed
-app.get('/seeds/add', function(req, res){
-	res.render('add_lead.jade',{ locals: {
-   		currentURL:'/seeds/' 
-        }
+	res.render('home',{ locals: {
+			currentURL:'/' 
+    	}
     });	
 });
 
-// Process lead(seed)
-app.get('/seeds/process', function(req, res){
-	var user = req.query.username;
-	var demo = req.query.demo;
-	
-	twitterProcessor.processLead(demo,user,function(error){
-		res.redirect('/seeds/');	
-	});
-	
-});
+
+
+var routes = require('./routes');
+var Vendor = require('./models/vendor');
+
+
+/**
+ * Vendor routes.
+ */
+
+app.get('/register', routes.vendor.register);
+app.post('/register', routes.vendor.register);
+
+/**
+ * View user route.
+ */
+
+app.get('/vendors', routes.vendor.view);
+app.get('/vendors/:name', routes.vendor.viewVendor);
+
+
 
 
 
@@ -130,7 +77,8 @@ app.dynamicHelpers({
 });
 
 // Start server
-var port = process.env.PORT || 3000;
-app.listen(port, function() {
-  console.log("Listening on " + port);
+app.listen(app.settings.port, function() {
+  console.log("Listening on " + app.settings.port);
 });
+
+

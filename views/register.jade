@@ -1,3 +1,22 @@
-h1 Register
 
-a(href='/register/twitter') Login with Twitter
+
+.main-content
+
+  form(action='/register', method='POST', enctype='multipart/form-data')
+    
+    
+    div
+      label(for='name') Name: 
+        span.required *
+      input(type='text', id='name', name='vendor[name]', value='')
+    div
+      label(for='description') Description: 
+        span.required *
+      input(type='text', id='description', name='vendor[description]', value='')
+    div
+      label(for='address') Address: 
+        span.required *
+      input(type='text', id='address', name='vendor[address]', value='')
+
+
+    input(type='submit', value='Register', class='submit')
