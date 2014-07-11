@@ -79,10 +79,8 @@ app.dynamicHelpers({
 });
 
 // Start server
-app.listen(19251, function() {
-  console.log("Listening on 19215");
+app.listen(app.settings.port, function() {
+  console.log("Listening on " + app.settings.port);
 });
-
-
 
 
