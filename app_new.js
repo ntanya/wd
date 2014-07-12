@@ -71,6 +71,7 @@ app.get('/vendors/:name', routes.vendor.viewVendor);
 
 /* Reviews */
 app.get('/reviews/add', routes.review.add);
+app.post('/reviews/add', routes.review.add);
 
 
 // Set dynamic helpers

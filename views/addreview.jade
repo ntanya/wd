@@ -6,19 +6,19 @@
     div
       label(for='name') Name: 
         span.required *
-      input(type='text', id='authorname', name='authorid', value='')
+      input(type='text', id='authorname', name='review[authorid]', value='')
     div
       label(for='name') Vendor: 
         span.required *
-      input(type='text', id='vendorid', name='vendorid', value='')
+      input(type='text', id='vendorid', name='review[vendorid]', value='')
     div
       label(for='description') Write your review here: 
         span.required *
-      textarea(id='reviewtext', name='reviewtext')
+      textarea(id='review text', name='review[text]')
     div
       label(for='address') Stars: 
         span.required *
-      select(id='stars', name='stars')
+      select(id='stars', name='review[value]')
         - for (var i = 1; i < 6; i++) {
           option(id=i) #{i}
         - }
