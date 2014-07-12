@@ -1,0 +1,27 @@
+
+
+.main-content
+
+  form(action='/reviews/add', method='POST', enctype='multipart/form-data') 
+    div
+      label(for='name') Name: 
+        span.required *
+      input(type='text', id='authorname', name='authorid', value='')
+    div
+      label(for='name') Vendor: 
+        span.required *
+      input(type='text', id='vendorid', name='vendorid', value='')
+    div
+      label(for='description') Write your review here: 
+        span.required *
+      textarea(id='reviewtext', name='reviewtext')
+    div
+      label(for='address') Stars: 
+        span.required *
+      select(id='stars', name='stars')
+        - for (var i = 1; i < 6; i++) {
+          option(id=i) #{i}
+        - }
+        
+
+    input(type='submit', value='Submit Review', class='submit')

@@ -9,6 +9,7 @@ table#trends
        a(href='/trends?sort=datecreated') Date created
      td Description
      td Category
+     td ID
   each item in vendorData
     tr(id=item.id)
      td(class="tag")
@@ -16,3 +17,4 @@ table#trends
      td
      td=item.description
      td=item.category
+     td=item.id

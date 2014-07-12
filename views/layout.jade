@@ -1,4 +1,4 @@
-!!! 5
+<!DOCTYPE html>
 html(lang="en")
   head
     title W
@@ -6,19 +6,19 @@ html(lang="en")
     script(src='/javascripts/script.js')
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    - if(currentURL == '/register')
+    - if(currentURL == '/sf')
       div#register
         div#body!=body
     - else
       div#nav
         ul
           li 
-            if(currentURL == '/vendors/')
+            if(currentURL == '/vendors')
               a(href='/vendors/').current Vendors
             else
               a(href='/vendors/') Vendors
           li
-            if(currentURL == '/register/')
+            if(currentURL == '/register')
               a(href='/register/').current Register
             else
               a(href='/register/') Register
@@ -32,5 +32,8 @@ html(lang="en")
               a(href='/forum/').current Forum 
             else
               a(href='/forum/') Forum 
+          li
+            a(href='/reviews/add') Add Reviews 
+
         div#container
          div#body!= body
