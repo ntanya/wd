@@ -2,6 +2,7 @@
 var express = require('express');
 var mongoose = require('mongoose');
 
+var config = require('./config.json');
 
 var app = module.exports = express.createServer();//(express.basicAuth(authorize));
 //var MemStore = express.session.MemoryStore;
@@ -22,14 +23,13 @@ app.use(express.session({secret: '1234567890QWERTY'}));
 });
 
 
-app.configure('development', function(){
+app.configure(function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-  app.set('host','localhost');
-  //app.set('mongostr','mongodb://localhost/wedding');
-  app.set('port', 3000);
-  app.set('mongostr', 'mongodb://tanya:tanya@ds037637.mongolab.com:37637/wedding');
+  app.set('host',config.host);
+  app.set('port', config.port);
+  app.set('mongostr', config.db);
 });
-
+/*
 app.configure('production', function(){
   app.use(express.errorHandler());
   app.set('host', 'wd.tanyanam.com');
@@ -37,6 +37,7 @@ app.configure('production', function(){
   app.set('mongostr', 'mongodb://tanya:tanya@ds037637.mongolab.com:37637/wedding');
 });
 
+*/
 
 
 

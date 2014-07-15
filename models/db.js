@@ -6,7 +6,7 @@
 var mongoose = require('mongoose'),
   Schema = mongoose.Schema,
   ObjectId = Schema.ObjectId,
-  credentials = require('../credentials');
+  credentials = require('../config.json');
 
 /**
  * Connects to MongoDB.
