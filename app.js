@@ -29,16 +29,6 @@ app.configure(function(){
   app.set('port', config.port);
   app.set('mongostr', config.db);
 });
-/*
-app.configure('production', function(){
-  app.use(express.errorHandler());
-  app.set('host', 'wd.tanyanam.com');
-  app.set('port', 19215);
-  app.set('mongostr', 'mongodb://tanya:tanya@ds037637.mongolab.com:37637/wedding');
-});
-
-*/
-
 
 
 // Route middlewares
