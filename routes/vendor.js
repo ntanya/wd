@@ -5,7 +5,7 @@
 var Vendor = require('../models/vendor');
 
 
-exports.register = function (req, res, next) {
+exports.create = function (req, res, next) {
   var vendor = new Vendor();
 
   console.log("method: " + req.method);	
@@ -42,13 +42,13 @@ exports.register = function (req, res, next) {
         */
         console.log("some errors on save");
         vendor.errors = "Errors while saving vendor";
-        return res.render('register', { vendorData: vendor, currentURL:'register' });
+        return res.render('/create', { vendorData: vendor, currentURL:'register' });
       }
       res.redirect('/vendors'); 
     });
     }
     else {
-    res.render('register', { vendorData: vendor, currentURL:'register' });
+    res.render('create', { vendorData: vendor, currentURL:'register' });
   }
 };
 

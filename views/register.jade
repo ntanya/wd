@@ -4,17 +4,22 @@
 
   form(action='/register', method='POST', enctype='multipart/form-data') 
     div
-      label(for='name') Name: 
+      label(for='name') First Name: 
         span.required *
-      input(type='text', id='name', name='vendor[name]', value='')
+      input(type='text', id='firstname', name='user[firstname]', value='')
     div
-      label(for='description') Description: 
+      label(for='name') Last Name: 
         span.required *
-      input(type='text', id='description', name='vendor[description]', value='')
+      input(type='text', id='lastname', name='user[lastname]', value='')
     div
-      label(for='address') Address: 
+      label(for='name') Email: 
         span.required *
-      input(type='text', id='address', name='vendor[address]', value='')
+      input(type='text', id='email', name='user[email]', value='')
+    div
+      label(for='description') Password: 
+        span.required *
+      input(type='password', id='password', name='user[password]', value='')
+
 
 
     input(type='submit', value='Register', class='submit')

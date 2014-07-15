@@ -1,78 +1,71 @@
+
 var express = require('express');
-//var connect = require('connect');
 var mongoose = require('mongoose');
 
-
-var mongostr = 'mongodb://tanya:tanya@ds037637.mongolab.com:37637/wedding';
-
-
-mongoose.connect(uristring, function (err, res) {
-  if (err) {
-  console.log ('ERROR connecting to: ' + uristring + '. ' + err);
-  } else {
-  console.log ('Succeeded connected to: ' + uristring);
-  }
-});
-
-
-
-
-var routes = require('./routes');
-var Vendor = require('./models/vendor');
-
-
-
-
-var vendorProsessor = require('./vendors').VendorProcessor;
-//var mongostore = require('connect-mongo');
 
 var app = module.exports = express.createServer();//(express.basicAuth(authorize));
 //var MemStore = express.session.MemoryStore;
 
 app.configure(function(){
 app.use(express.cookieParser());
+app.use(express.session({secret: '1234567890QWERTY'}));
 	
 
   app.use(express.static(__dirname + '/public'));
-  //app.use(express.session({secret: 'secret_key', store: MemStore({reapInterval: 60000 * 10})}));
-  //app.use(express.session({secret:'asdfadsf'},mongodb_session_store_config()));
-  //app.use(express.session(mongodb_session_store_config()));
-  
-
-  
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.set('view options', {layout: true});
   app.use(express.bodyParser());
   app.use(express.methodOverride());
-  //app.use(require('stylus').middleware({ src: __dirname + '/public' }));
   app.use(app.router);
-  app.set('port',process.env.PORT || 3000);
+  //app.set('port',process.env.PORT || 3000);
 });
-
-
-
-
-var vendorProcessor = new VendorProcessor();
 
 
 app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
   app.set('host','localhost');
   //app.set('mongostr','mongodb://localhost/wedding');
+  app.set('port', 3000);
   app.set('mongostr', 'mongodb://tanya:tanya@ds037637.mongolab.com:37637/wedding');
 });
 
 app.configure('production', function(){
   app.use(express.errorHandler());
-  app.set('host', 'stormy-fire-6148.herokuapp.com');
-  app.set('mongostr','mongodb://tanya:tanya@ds033757.mongolab.com:33757/heroku_app5667663');
+  app.set('host', 'wd.tanyanam.com');
+  app.set('port', 19215);
+  app.set('mongostr', 'mongodb://tanya:tanya@ds037637.mongolab.com:37637/wedding');
 });
 
 
+
+
+// Route middlewares
+
+/**
+ * Checks if user is logged in.
+ */
+
+function loginRequired(req, res, next) {
+  if (req.session.user) {
+    next();
+  } else {
+    req.session.returnUrl = req.url;
+    return res.redirect('/login');
+  }
+}
+
+
+
+
+
+
+
+/* ---------   ROUTES ---------*/
+
 // Home page
 app.get('/', function(req, res){
-	res.render('home.jade',{ locals: {
+	res.render('home',{ locals: {
 			currentURL:'/' 
     	}
     });	
@@ -80,64 +73,49 @@ app.get('/', function(req, res){
 
 
 
-// vendor categories
-app.get('/vendors', function(req, res){
-
-	var sort = req.query.sort || 'count';
-	var order = req.query.order || '-1';
-	var category = '';
-	
-  	vendorProcessor.getVendors(function(error, vendorData){
-  				console.log(vendorData);
-				res.render('vendors.jade',{ locals: {
-						   vendorData: vendorData,	
-						   currentURL:'/vendors/' 
-					}
-		   		});		
-			}
-		
-		,sort,order);
-
-});
+var routes = require('./routes');
 
 
-// vendor details
-app.get('/vendors/:id', function(req, res){
+/**
+ * Vendor routes.
+ */
 
-	var id = req.params.id;
-	console.log('found id:' + id); 
-	
-  	vendorProcessor.getVendorById(function(error, vendorData){
-  				console.log(vendorData);
-				res.render('vendors.jade',{ locals: {
-						   vendorData: vendorData,	
-						   currentURL:'/vendors/' 
-					}
-		   		});		
-			}, id);
+app.get('/create', routes.vendor.create);
+app.post('/create', routes.vendor.create);
 
-});
+/**
+ * View vendor route.
+ */
+
+app.get('/vendors', routes.vendor.view);
+app.get('/vendors/:name', routes.vendor.viewVendor);
 
 
-
-app.get('/register/', function(req,res){
-	res.render('register.jade',{locals:{currentURL:'/register/' }});
-
-});
+/*  View users */
+app.get('/users', routes.user.view);
+app.get('/register', routes.user.register);
 app.post('/register', routes.user.register);
 
+/**
+ * Login user route.
+ */
 
-/*
+app.get('/login', routes.user.login);
+app.post('/login', routes.user.login);
 
-// vendor details listing
-app.get('/vendors/', function(req, res){
-	
-  	res.render('vendors.jade',{ locals: {
-    	}
-    });	
-});
+/**
+ * Logout user route.
+ */
 
-*/
+app.get('/logout', routes.user.logout);
+
+
+
+
+/* Reviews */
+app.get('/reviews/add', routes.review.add);
+app.post('/reviews/add', routes.review.add);
+
 
 // Set dynamic helpers
 app.dynamicHelpers({

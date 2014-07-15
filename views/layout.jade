@@ -17,6 +17,11 @@ html(lang="en")
               a(href='/vendors/').current Vendors
             else
               a(href='/vendors/') Vendors
+           li
+            if(currentURL == '/create')
+              a(href='/create/').current Create Vendor
+            else
+              a(href='/create/') Create Vendor 
           li
             if(currentURL == '/register')
               a(href='/register/').current Register
@@ -24,14 +29,14 @@ html(lang="en")
               a(href='/register/') Register
           li 
             if(currentURL == '/blog/')
-              a(href='/blog/').current Blog
+              a(href='http://wdblog.tanyanam.com').current Blog
             else
-              a(href='/blog/') Blog
+              a(href='http://wdblog.tanyanam.com') Blog
           li
-            if(currentURL == '/forum/')
-              a(href='/forum/').current Forum 
+            if(currentURL == '/login/')
+              a(href='/login/').current Login 
             else
-              a(href='/forum/') Forum 
+              a(href='/login/') Login 
           li
             a(href='/reviews/add') Add Reviews 
 

@@ -1,0 +1,21 @@
+.main-content
+
+  - if (user.errors)
+    div(class='error')
+      ul
+        - each err in user.errors
+          li= err
+  form(action='/login', method='POST')
+              
+    input(type='hidden', name='_csrf', value=csrfToken)
+
+    div
+      label(for='userEmail') Email: 
+        span.required *
+      input(type='text', id='userEmail', name='user[email]', value=user.email, class='title')
+    div
+      label(for='userPassword') Password: 
+        span.required *
+      input(type='password', id='userPassword', name='user[password]', value=user.password, class='title')
+    
+    input(type='submit', value='Login', class='submit')
