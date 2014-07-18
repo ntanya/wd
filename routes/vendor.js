@@ -42,13 +42,13 @@ exports.create = function (req, res, next) {
         */
         console.log("some errors on save");
         vendor.errors = "Errors while saving vendor";
-        return res.render('/create', { vendorData: vendor, currentURL:'register' });
+        return res.render('create', { vendor: vendor, currentURL:'register' });
       }
       res.redirect('/vendors'); 
     });
     }
     else {
-    res.render('create', { vendorData: vendor, currentURL:'register' });
+    res.render('create', { vendor: vendor, currentURL:'register' });
   }
 };
 

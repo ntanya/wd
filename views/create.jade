@@ -1,6 +1,11 @@
 
 
 .main-content
+  - if (vendor.errors)
+    div(class='error')
+      ul
+        - each err in vendor.errors
+          li= err
 
   form(action='/create', method='POST', enctype='multipart/form-data') 
     div

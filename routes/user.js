@@ -24,32 +24,25 @@ exports.register = function (req, res, next) {
     user.save(function (err) {
       if (err) { // validation failed
         
-        /*
+        
         
         if (~err.toString().indexOf('duplicate key')) {
-          if (~err.toString().indexOf('username')) {
+         if (~err.toString().indexOf('email')) {
             user.password = u.password;
-            user.errors = [ 'Korisničko ime je već zauzeto.' ];
-          } else if (~err.toString().indexOf('email')) {
-            user.password = u.password;
-            user.errors = [ 'E-mail je već zauzet.' ];
+            user.errors = [ 'This email address already exists' ];
           }
         }
-
         
-        if (user.name.first || user.name.last || bio) {
-          user.displayFullForm = true;
-        }
-        */
-        console.log("some errors on save");
-        user.errors = "Errors while saving vendor";
-        return res.render('register', { userData: user, currentURL:'register' });
+        console.log("errors on save:" + err.toString());
+        console.log(JSON.stringify(err));  
+        user.errors = ["Errors while saving user"];
+        return res.render('register', { user: user, currentURL:'register' });
       }
       res.redirect('/users'); 
     });
     }
     else {
-    res.render('register', { userData: user, currentURL:'register' });
+    res.render('register', { user: user, currentURL:'register' });
   }
 };
 
